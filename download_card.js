@@ -7,9 +7,36 @@ var hitme = require('hitme');
 
 var url_prefix = 'http://gatherer.wizards.com';
 
+var buildUrl = function(url, parameters) {
+    var ret = url_prefix + url;
+    if (parameters) {
+	var keys = Object.keys(parameters).sort();
+	var aux = [];
+	
+	keys.forEach(function(key) {
+	    var value = parameters[key];
+	    if (typeof(value) == 'string') {
+		value = value.replace(/ /g, '+');
+	    }
+	    
+	    aux.push(key + '=' + value);
+	});
+	ret += '?' + aux.join('&');
+    }
+
+    console.log(ret);
+    return(ret);
+};
+
 var downloadFiles = function(multiverseid, callback) {
-    var oracleUrl = url_prefix + '/Pages/Card/Details.aspx?printed=false&multiverseid=' + multiverseid;
-    var printedUrl = url_prefix + '/Pages/Card/Details.aspx?printed=true&multiverseid=' + multiverseid;
+    var oracleUrl = buildUrl(
+	'/Pages/Card/Details.aspx',
+	{ 'printed': 'false', 'multiverseid': multiverseid }
+    );
+    var printedUrl = buildUrl(
+	'/Pages/Card/Details.aspx',
+	{ 'printed': 'true', 'multiverseid': multiverseid }
+    );
 
     var ret = {
         languages: [],
@@ -37,7 +64,7 @@ var downloadFiles = function(multiverseid, callback) {
         var maxPage = 1;
         if (grabPrintings.maxPage)
             maxPage = grabPrintings.maxPage;
-	var url = url_prefix + '/Pages/Card/Printings.aspx?page=' + page + '&multiverseid=' + multiverseid;
+	var url = buildUrl('/Pages/Card/Printings.aspx', { 'page' : page, 'multiverseid': multiverseid });
 
 	downloader.get(url).then(function(data) {
             ret.printings.push(data.getBody());
@@ -66,7 +93,7 @@ var downloadFiles = function(multiverseid, callback) {
         var maxPage = 1;
         if (grabLanguages.maxPage)
             maxPage = grabLanguages.maxPage;
-        var url = url_prefix + '/Pages/Card/Languages.aspx?page=' + page + '&multiverseid=' + multiverseid;
+        var url = buildUrl('/Pages/Card/Languages.aspx', { 'page': page, 'multiverseid': multiverseid });
 
 	downloader.get(url).then(function(data) {
             ret.languages.push(data.getBody());
@@ -115,9 +142,7 @@ module.exports.downloadSetCardList = function(setName, callback) {
     var ret = [];
 
     var downloadPage = function(pagenum) {
-	var url = url_prefix + '/Pages/Search/Default.aspx?output=checklist&set=%5b%22' + set + '%22%5d&page=' + pagenum;
-
-	console.log(url);
+	var url = buildUrl('/Pages/Search/Default.aspx', { 'output': 'checklist', 'set': '%5b%22' + set + '%22%5d', 'page': pagenum });
 
 	downloader.get(url).then(function(data) {
 	    var $ = cheerio.load(data.getBody());
