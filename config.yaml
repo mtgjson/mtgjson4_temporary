@@ -1,0 +1,5 @@
+# mtgjson config file
+cache:
+  provider: redis
+  #provider: fs
+  #provider: none
