@@ -56,8 +56,18 @@ var fscache = {
     }
 };
 
+var module_initialized = false;
+
 module.exports = {};
-module.exports.get = function(url, options, callback) {
+
+// Exposes the requestify if needed elsewhere
+module.exports.requestify = requestify;
+
+// A simple wrapper to requestify get method
+module.exports.get = function(url, options) {
+    if (!module_initialized)
+	throw(new Error("Downloader module not initialized."));
+    
     if (!options)
 	options = {};
 
@@ -68,10 +78,10 @@ module.exports.get = function(url, options, callback) {
 	};
     }
 
-    return(requestify.get(url, options));
-    
+    return(requestify.get(url, options));    
 };
 
+// initialize the downloader module fom the cache configuration data.
 module.exports.init = function(cache_config, callback) {
     if (!callback && typeof(cache_config) == 'function') {
 	callback = cache_config;
@@ -94,6 +104,8 @@ module.exports.init = function(cache_config, callback) {
 
     if (module.exports.expires === undefined)
 	module.exports.expires = 3600000; // 1h
+
+    module_initialized = true;
 
     if (cache_config.provider == 'none') {
 	callback();
@@ -141,6 +153,7 @@ module.exports.init = function(cache_config, callback) {
     }
 }
 
+// This functions quits the redis client, if we're using it.
 module.exports.cleanup = function(callback) {
     if (module.exports.provider == 'redis')
 	module.exports.redis_client.quit();
