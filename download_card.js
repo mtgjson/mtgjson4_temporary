@@ -107,3 +107,53 @@ module.exports = function(multiverseid, callback) {
 };
 
 module.exports.downloadFiles = downloadFiles;
+
+module.exports.downloadSetCardList = function(setName, callback) {
+    var set = setName.replace(/ /g, '+');
+    var maxpages = 1;
+
+    var ret = [];
+
+    var downloadPage = function(pagenum) {
+	var url = url_prefix + '/Pages/Search/Default.aspx?output=checklist&set=%5b%22' + set + '%22%5d&page=' + pagenum;
+
+	console.log(url);
+
+	downloader.get(url).then(function(data) {
+	    var $ = cheerio.load(data.getBody());
+
+	    var pageList = $('#ctl00_ctl00_ctl00_MainContent_SubContent_topPagingControlsContainer');
+	    $('a', pageList).each(function(idx, obj) {
+		var num = parseInt($(obj).text());
+		if (num > maxpages)
+		    maxpages = num;
+	    });
+
+	    // Read the cards
+	    var checklist = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_searchResultsContainer tr.cardItem');
+	    checklist.each(function(idx, cardItem) {
+		var obj = $('.nameLink', cardItem);
+		var card = {};
+		card.number = $('.number', cardItem).html();
+		card.name = $(obj).html();
+		card.multiverseid = $(obj).attr('href').match(/multiverseid=([^&]*)/)[1];
+		card.artist = $('.artist', cardItem).html();
+		card.color = $('.color', cardItem).html();
+		card.rarity = $('.rarity', cardItem).html();
+		card.set = $('.set', cardItem).html();
+		ret.push(card);
+	    });
+
+	    // Next page?
+	    pagenum++;
+	    if (pagenum < maxpages) {
+		setImmediate(downloadPage, pagenum);
+	    }
+	    else {
+		callback(null, ret);
+	    }
+	}).fail(function(data) { callback(data); });
+    };
+
+    downloadPage(0);
+};
