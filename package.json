@@ -5,5 +5,11 @@
   "description": "Code for building and mantaining mtgjson.com database",
   "private": true,
   "dependencies": {
+    "async": "^2.0.1",
+    "cheerio": "^0.22.0",
+    "hitme": "^1.1.1",
+    "js-yaml": "^3.6.1",
+    "redis": "^2.6.2",
+    "requestify": "^0.2.3"
   }
 }

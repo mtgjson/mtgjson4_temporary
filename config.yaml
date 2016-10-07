@@ -1,5 +1,21 @@
 # mtgjson config file
+
+mtgjson:
+  # Should we use a base url different than the default one?
+  #base_url: http://example.com/
+
 cache:
   provider: redis
   #provider: fs
   #provider: none
+  #provider: memory
+  expires: 3600000000
+
+  # Path is relative to the mtgjson root folder, or
+  # from the root filesystem if it starts with a "/" forward slash.
+  #path: .
+
+  # For redis
+  host: localhost
+  port: 6379
+
