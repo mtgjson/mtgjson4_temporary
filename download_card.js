@@ -4,6 +4,7 @@ var downloader = require('./downloader');
 
 var cheerio = require('cheerio');
 var hitme = require('hitme');
+var async = require('async');
 
 var url_prefix = 'http://gatherer.wizards.com';
 
@@ -24,7 +25,6 @@ var buildUrl = function(url, parameters) {
 	ret += '?' + aux.join('&');
     }
 
-    console.log(ret);
     return(ret);
 };
 
@@ -181,4 +181,53 @@ module.exports.downloadSetCardList = function(setName, callback) {
     };
 
     downloadPage(0);
+};
+
+module.exports.downloadAllSetsInfo = function(callback) {
+    var url = buildUrl('/Pages/Default.aspx');
+
+    downloader.get(url).then(function(data) {
+	var $ = cheerio.load(data.getBody());
+
+	var setNames = [];
+	var i;
+
+	var options = $('#ctl00_ctl00_MainContent_Content_SearchControls_setAddText option');
+	for (i = 0; i < options.length; i++) {
+	    var option = options[i];
+	    var value = $(option).attr('value');
+	    if (value != '')
+		setNames.push(value);
+	}
+
+	var ret = [];
+
+	async.eachSeries(
+	    setNames,
+	    function(set, cb) {
+		var setUrl = buildUrl('/Pages/Search/Default.aspx', { output: 'standard', set: '%5b%22' + set + '%22%5d' });
+
+		downloader.get(setUrl).then(function(data) {
+		    var $ = cheerio.load(data.getBody());
+		    var obj = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl01_cardSetCurrent img');
+		    if (obj.length > 0) {
+			var setCode = obj.attr('src').replace(/.*set=([^&]*).*/, '$1');
+			var aux = { name: set, code: setCode };
+
+			ret.push(aux);
+		    }
+		    else {
+			console.log("Cannot retrieve information for set %s", set);
+		    }
+
+		    cb();
+		}).fail(function(data) {
+		    throw(new Error("Error downloading " + setUrl));
+		});
+	    },
+	    function() {
+		callback(null, ret);
+	    }
+	);
+    }).fail(function(data) { callback(data); });
 };
