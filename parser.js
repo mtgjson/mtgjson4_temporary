@@ -166,6 +166,18 @@ var parseOracle = function(multiverseid, data, callback) {
     card.set = cardSetInfo.match(/set=([^&]*)/)[1];
     card.rarity = RARITIES[cardSetInfo.match(/rarity=([^&]*)/)[1]];
 
+    // Other sets
+    var cardSets = $('#' + idPrefix + '_otherSetsRow');
+    if (cardSets.length > 0) {
+	card.printings = [];
+	$('img', cardSets).each(function(idx, obj) {
+	    var set = $(obj).attr('src').match(/set=([^&]*)/)[1];
+	    card.printings.push(set);
+	});
+
+	card.printings = card.printings.unique().sort();
+    }
+
     // Card Number
     var cardNumber = $('#' + idPrefix + '_numberRow');
     if (cardNumber.length > 0)
