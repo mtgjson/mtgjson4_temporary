@@ -3,6 +3,17 @@
 var cheerio = require('cheerio');
 var moment = require('moment');
 
+// TODO: Find a better place for this
+Array.prototype.unique = function() {
+    return this.reduce(function(accum, current) {
+	if (accum.indexOf(current) < 0)
+	    accum.push(current);
+	
+	return(accum);
+    }, []);
+};
+
+
 var SYMBOLS = {
     'White': 'W',
     'Blue': 'U',
@@ -12,6 +23,22 @@ var SYMBOLS = {
     'Colorless': 'C',
     'Tap': 'T',
     'Energy': 'E'
+};
+
+var COLORS = {
+    'W': 'white',
+    'U': 'blue',
+    'B': 'black',
+    'R': 'red',
+    'G': 'green'
+};
+
+var RARITIES = {
+    'C': 'common',
+    'U': 'uncommon',
+    'R': 'rare',
+    'M': 'mythic rare',
+    'S': 'special'
 };
 
 var fixText = function(blocks) {
@@ -25,7 +52,7 @@ var fixText = function(blocks) {
 	    })
 	    .replace(/&apos/g, "'")  // Fix html
 	    .replace(/&quot;/g, '"')
-	    .replace(/&#x2212;/g, '-') // Minus on planeswalker cards
+	    .replace(/&#x2212;/g, '−') // Minus on planeswalker cards
 	    .replace(/&#x2014;/g, '-') // Fix long dashes
 	    .replace(/<[^>]*>/g, '');
     };
@@ -132,7 +159,7 @@ var parseOracle = function(multiverseid, data, callback) {
     // More card info
     var cardSetInfo = $('#' + idPrefix + '_currentSetSymbol img').attr('src');
     card.set = cardSetInfo.match(/set=([^&]*)/)[1];
-    card.rarity = cardSetInfo.match(/rarity=([^&]*)/)[1];
+    card.rarity = RARITIES[cardSetInfo.match(/rarity=([^&]*)/)[1]];
 
     // Card Number
     var cardNumber = $('#' + idPrefix + '_numberRow');
@@ -163,6 +190,19 @@ var parseOracle = function(multiverseid, data, callback) {
 		'text': fixText(content)
 	    });
 	});
+    }
+
+    // Calculate colors
+    if (card.manacost) {
+	var matchedColors = card.manacost
+	    .match(/{[WUBRG]}/g);
+
+	if (matchedColors != null && matchedColors.length > 0)
+	    card.colors = matchedColors.map(function(x) {
+		var symbol = x.replace(/[{}]/g, '');
+		return(COLORS[symbol]);
+	    })
+	    .unique();
     }
 
     callback(null, card);
