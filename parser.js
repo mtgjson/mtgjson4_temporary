@@ -20,13 +20,35 @@ var SYMBOLS = {
     'Black': 'B',
     'Red': 'R',
     'Green': 'G',
+    'Blue or Black': 'U/B',
+    'Red or Green': 'R/G',
     'Black or Red': 'B/R',
     'Green or White': 'G/W',
     'White or Blue': 'W/B',
+    'Two or White': '2/W',
     'Two or Blue': '2/U',
+    'Two or Black': '2/B',
+    'Two or Red': '2/R',
+    'Two or Green': '2/G',
     'Colorless': 'C',
     'Tap': 'T',
-    'Energy': 'E'
+    'Untap': 'Q',
+    'Energy': 'E',
+    'Variable Colorless': 'X',
+    '0': '0',
+    '1': '1',
+    '2': '2',
+    '3': '3',
+    '4': '4',
+    '5': '5',
+    '6': '6',
+    '7': '7',
+    '8': '8',
+    '9': '9',
+    '10': '10',
+    '11': '11',
+    '12': '12',
+    '13': '13'
 };
 
 var COLORS = {
@@ -111,6 +133,8 @@ var parseOracle = function(multiverseid, data, callback) {
 
 	    if (Object.keys(SYMBOLS).indexOf(cost) >= 0)
 		cost = SYMBOLS[cost];
+	    else
+		console.log("Warning: Unknown mana cost: '%s'", cost);
 
 	    aux.push('{' + cost + '}');
 	}
