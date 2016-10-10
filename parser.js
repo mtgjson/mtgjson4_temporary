@@ -20,6 +20,10 @@ var SYMBOLS = {
     'Black': 'B',
     'Red': 'R',
     'Green': 'G',
+    'Black or Red': 'B/R',
+    'Green or White': 'G/W',
+    'White or Blue': 'W/B',
+    'Two or Blue': '2/U',
     'Colorless': 'C',
     'Tap': 'T',
     'Energy': 'E'
@@ -50,7 +54,7 @@ var fixText = function(blocks) {
 		    ret = SYMBOLS[p1];
 		return('{' + ret + '}');
 	    })
-	    .replace(/&apos/g, "'")  // Fix html
+	    .replace(/&apos;/g, "'")  // Fix html
 	    .replace(/&quot;/g, '"')
 	    .replace(/&#x2212;/g, '−') // Minus on planeswalker cards
 	    .replace(/&#x2014;/g, '-') // Fix long dashes
@@ -92,6 +96,7 @@ var parseOracle = function(multiverseid, data, callback) {
     var idPrefix = $(rightCol[colIdx]).attr('id').replace('_rightCol', '');
 
     card.name = $('#' + idPrefix + '_nameRow .value').text().trim();
+    card.name = card.name.replace(/Æ/g, 'Ae');
 
     // Parse card mana cost
     var manaCost = $('#' + idPrefix + '_manaRow');
@@ -195,14 +200,23 @@ var parseOracle = function(multiverseid, data, callback) {
     // Calculate colors
     if (card.manacost) {
 	var matchedColors = card.manacost
-	    .match(/{[WUBRG]}/g);
+	    .match(/{[2WUBRG/]*}/g);
 
-	if (matchedColors != null && matchedColors.length > 0)
-	    card.colors = matchedColors.map(function(x) {
-		var symbol = x.replace(/[{}]/g, '');
-		return(COLORS[symbol]);
-	    })
-	    .unique();
+	if (matchedColors != null && matchedColors.length > 0) {
+	    card.colors = [];
+	    var colors = [];
+	    matchedColors.forEach(function(x) {
+		var symbol = x.replace(/[{}/]/g, '');
+		var i;
+		for (i = 0; i < symbol.length; i++) {
+		    if ('WUBRG'.indexOf(symbol[i]) >= 0)
+			colors.push(symbol[i]);
+		}
+	    });
+	    colors.unique().forEach(function(x) {
+		card.colors.push(COLORS[x]);
+	    });
+	}
     }
 
     callback(null, card);
