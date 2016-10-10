@@ -39,6 +39,7 @@ var downloadFiles = function(multiverseid, callback) {
     );
 
     var ret = {
+	multiverseid: multiverseid,
         languages: [],
         printings: []
     };
