@@ -1,0 +1,12 @@
+{
+	"name" : "Legends",
+	"code" : "LEG",
+	"gathererCode" : "LE",
+	"releaseDate" : "1994-06-01",
+	"border" : "black",
+	"type" : "expansion",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"it": "Leggende"
+	},
+}

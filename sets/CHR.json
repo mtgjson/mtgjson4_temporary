@@ -1,0 +1,9 @@
+{
+	"name" : "Chronicles",
+	"code" : "CHR",
+	"gathererCode" : "CH",
+	"releaseDate" : "1995-07-01",
+	"border" : "white",
+	"type" : "reprint",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common"]
+}

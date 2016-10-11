@@ -1,0 +1,9 @@
+{
+	"name" : "Unlimited Edition",
+	"code" : "2ED",
+	"gathererCode" : "2U",
+	"releaseDate" : "1993-12-01",
+	"border" : "white",
+	"type" : "core",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"]
+}

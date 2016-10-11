@@ -1,0 +1,14 @@
+{
+	"name" : "Portal",
+	"code" : "POR",
+	"gathererCode" : "PO",
+	"releaseDate" : "1997-05-01",
+	"border" : "black",
+	"type" : "starter",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Portal",
+		"fr": "Portal",
+		"es": "Portal"
+	}
+}
