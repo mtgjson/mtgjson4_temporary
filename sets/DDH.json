@@ -1,0 +1,13 @@
+{
+	"name" : "Duel Decks: Ajani vs. Nicol Bolas",
+	"code" : "DDH",
+	"releaseDate" : "2011-09-02",
+	"border" : "black",
+	"type" : "duel deck",
+	"translations": {
+		"de": "Duel Decks: Ajani vs. Nicol Bolas",
+		"fr": "Duel Decks: Ajani vs. Nicol Bolas",
+		"it": "Duel Decks: Ajani vs. Nicol Bolas",
+		"es": "Duel Decks: Ajani vs. Nicol Bolas"
+	}
+}

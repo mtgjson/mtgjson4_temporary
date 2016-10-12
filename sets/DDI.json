@@ -1,0 +1,10 @@
+{
+	"name" : "Duel Decks: Venser vs. Koth",
+	"code" : "DDI",
+	"releaseDate" : "2012-03-30",
+	"border" : "black",
+	"type" : "duel deck",
+	"translations": {
+		"jp": "デュエルデッキ：ヴェンセール vs. コス"
+	}
+}

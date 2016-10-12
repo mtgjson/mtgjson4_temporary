@@ -1,0 +1,21 @@
+{
+	"name" : "Born of the Gods",
+	"code" : "BNG",
+	"releaseDate" : "2014-02-07",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Theros",
+	"booster" : [["rare", "mythic rare"], "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "land", "marketing"],
+	"translations": {
+		"de": "Kinder der Götter",
+		"fr": "Créations divines",
+		"it": "Figli degli dei",
+		"es": "Nacidos de los dioses",
+		"pt": "Nascidos dos Deuses",
+		"jp": "神々の軍勢",
+		"cn": "天神创生",
+		"ru": "Порождения Богов",
+		"tw": "天神創生",
+		"ko": "신들의 피조물"
+	}
+}
