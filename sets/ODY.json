@@ -1,0 +1,17 @@
+{
+	"name" : "Odyssey",
+	"code" : "ODY",
+	"gathererCode" : "OD",
+	"releaseDate" : "2001-10-01",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Odyssey",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Odyssee,
+		"fr": "Odyssée,
+		"it": "Odissea,
+		"es": "Odisea,
+		"pt": "Odisséia"
+	}
+}

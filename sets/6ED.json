@@ -1,0 +1,16 @@
+{
+	"name" : "Classic Sixth Edition",
+	"code" : "6ED",
+	"gathererCode" : "6E",
+	"releaseDate" : "1999-04-21",
+	"border" : "white",
+	"type" : "core",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Classic Sechste Edition",
+		"fr": "Classique Sixième Edition",
+		"it": "Classic Sesta Edizione",
+		"es": "Clásica Sexta Edición",
+		"pt": "Classica Sexta Edição"
+	}
+}
