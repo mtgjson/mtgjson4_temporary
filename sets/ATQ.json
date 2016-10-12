@@ -1,0 +1,9 @@
+{
+	"name" : "Antiquities",
+	"code" : "ATQ",
+	"gathererCode" : "AQ",
+	"releaseDate" : "1994-03-01",
+	"border" : "black",
+	"type" : "expansion",
+	"booster" : ["uncommon", "uncommon", "common", "common", "common", "common", "common", "common"]
+}

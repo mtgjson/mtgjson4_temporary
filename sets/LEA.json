@@ -1,0 +1,9 @@
+{
+	"name" : "Limited Edition Alpha",
+	"code" : "LEA",
+	"gathererCode" : "1E",
+	"releaseDate" : "1993-08-05",
+	"border" : "black",
+	"type" : "core",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"]
+}

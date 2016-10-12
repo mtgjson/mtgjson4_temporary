@@ -1,0 +1,14 @@
+{
+	"name" : "Revised Edition",
+	"code" : "3ED",
+	"gathererCode" : "3E",
+	"releaseDate" : "1994-04-01",
+	"border" : "white",
+	"type" : "core",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Unlimitierte Auflage",
+		"fr": "Tirage Non Limité",
+		"it": "Seconda Edizion"
+	}
+}

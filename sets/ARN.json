@@ -1,0 +1,9 @@
+{
+	"name" : "Arabian Nights",
+	"code" : "ARN",
+	"gathererCode" : "AN",
+	"releaseDate" : "1993-12-01",
+	"border" : "black",
+	"type" : "expansion",
+	"booster" : ["uncommon", "uncommon", "common", "common", "common", "common", "common", "common"]
+}

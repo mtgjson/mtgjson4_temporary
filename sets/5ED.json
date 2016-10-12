@@ -1,0 +1,16 @@
+{
+	"name" : "Fifth Edition",
+	"code" : "5ED",
+	"gathererCode" : "5E",
+	"releaseDate" : "1997-03-24",
+	"border" : "white",
+	"type" : "core",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Fünfte Edition",
+		"fr": "Cinquième Edition",
+		"it": "Quinta Edizione",
+		"es": "Quinta Edición",
+		"pt": "Quinta Edição"
+	}
+}

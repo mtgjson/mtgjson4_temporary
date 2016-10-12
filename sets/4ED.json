@@ -1,0 +1,16 @@
+{
+	"name" : "Fourth Edition",
+	"code" : "4ED",
+	"gathererCode" : "4E",
+	"releaseDate" : "1995-04-01",
+	"border" : "white",
+	"type" : "core",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Vierte Edition",
+		"fr": "Quatrième Edition",
+		"it": "Quarta Edizione",
+		"es": "Cuarta Edición",
+		"pt": "Quarta Ediçã"
+	}
+}

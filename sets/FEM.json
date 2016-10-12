@@ -1,0 +1,9 @@
+{
+	"name" : "Fallen Empires",
+	"code" : "FEM",
+	"gathererCode" : "FE",
+	"releaseDate" : "1994-11-01",
+	"border" : "black",
+	"type" : "expansion",
+	"booster" : ["uncommon", "uncommon", "common", "common", "common", "common", "common", "common"]
+}
