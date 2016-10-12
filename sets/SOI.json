@@ -1,0 +1,20 @@
+{
+	"name" : "Shadows over Innistrad",
+	"code" : "SOI",
+	"releaseDate" : "2016-04-08",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Shadows over Innistrad",
+	"booster" : [["rare", "mythic rare"], "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", ["common", ["double faced rare", "double faced mythic rare"]], ["double faced common", "double faced uncommon"], "land", "marketing"],
+	"translations": {
+		"de": "Schatten über Innistrad",
+		"fr": "Ténèbres sur Innistrad",
+		"it": "Ombre su Innistrad",
+		"es": "Sombras sobre Innistrad",
+		"pt": "Sombras em Innistrad",
+		"jp": "イニストラードを覆う影",
+		"cn": "依尼翠暗影",
+		"ru": "Тени над Иннистрадом",
+		"ko": "이니스트라드에 드리운 그림자"
+	}
+}

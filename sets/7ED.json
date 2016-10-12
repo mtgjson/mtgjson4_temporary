@@ -1,0 +1,16 @@
+{
+	"name" : "Seventh Edition",
+	"code" : "7ED",
+	"gathererCode" : "7E",
+	"releaseDate" : "2001-04-11",
+	"border" : "white",
+	"type" : "core",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "land"],
+	"translations": {
+		"de": "Siebte Edition",
+		"fr": "Septième Edition",
+		"it": "Settima Edizione",
+		"es": "Séptima Edición",
+		"pt": "Sétima Edição"
+	}
+}

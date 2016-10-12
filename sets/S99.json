@@ -1,0 +1,9 @@
+{
+	"name" : "Starter 1999",
+	"code" : "S99",
+	"gathererCode" : "P3",
+	"releaseDate" : "1999-07-01",
+	"border" : "white",
+	"type" : "starter",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "land", "land"]
+}

@@ -1,0 +1,15 @@
+{
+	"name" : "Starter 2000",
+	"code" : "S00",
+	"gathererCode" : "P4",
+	"releaseDate" : "2000-04-01",
+	"border" : "white",
+	"type" : "starter",
+	"translations": {
+		"de": "Starter 2000",
+		"fr": "Starter 2000",
+		"it": "Starter 2000",
+		"es": "Starter 2000",
+		"pt": "Starter 2000"
+	}
+}

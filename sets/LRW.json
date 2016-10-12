@@ -1,0 +1,20 @@
+{
+	"name" : "Lorwyn",
+	"code" : "LRW",
+	"releaseDate" : "2007-10-12",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Lorwyn",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "marketing"],
+	"translations": {
+		"de": "Lorwyn",
+		"fr": "Lorwyn",
+		"it": "Lorwyn",
+		"es": "Lorwyn",
+		"pt": "Lorwyn",
+		"jp": "ローウィン",
+		"cn": "洛温",
+		"ru": "Лорвин",
+		"tw": "Lorwyn"
+	}
+}

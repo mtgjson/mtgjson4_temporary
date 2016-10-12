@@ -1,0 +1,17 @@
+{
+	"name" : "Apocalypse",
+	"code" : "APC",
+	"gathererCode" : "AP",
+	"releaseDate" : "2001-06-04",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Invasion",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Apokalypse",
+		"fr": "Apocalypse",
+		"it": "Apocalisse",
+		"es": "Apocalipsis",
+		"pt": "Apocalipse"
+	}
+}

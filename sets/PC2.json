@@ -1,0 +1,14 @@
+{
+	"name" : "Planechase 2012 Edition",
+	"code" : "PC2",
+	"releaseDate" : "2012-06-01",
+	"border" : "black",
+	"type" : "planechase",
+	"translations": {
+		"de": "Planechase 2012 Edition",
+		"fr": "Planechase 2012 Edition",
+		"it": "Planechase 2012 Edition",
+		"es": "Planechase 2012 Edition",
+		"jp": "プレインチェイス2012"
+	}
+}

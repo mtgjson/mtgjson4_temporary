@@ -1,0 +1,13 @@
+{
+	"name" : "Portal Three Kingdoms",
+	"code" : "PTK",
+	"gathererCode" : "PK",
+	"releaseDate" : "1999-05-01",
+	"border" : "white",
+	"type" : "starter",
+	"booster" : ["rare", "uncommon", "uncommon", "common", "common", "common", "common", "common", "land", "land"],
+	"translations": {
+		"jp": "Portal Three Kingdoms",
+		"cn": "Portal Three Kingdoms"
+	}
+}

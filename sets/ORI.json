@@ -1,0 +1,20 @@
+{
+	"name" : "Magic Origins",
+	"code" : "ORI",
+	"releaseDate" : "2015-07-17",
+	"border" : "black",
+	"type" : "core",
+	"booster" : [["rare", "mythic rare"], "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "land", "marketing"],
+	"translations": {
+		"de": "Magic Ursprünge",
+		"fr": "Magic Origines",
+		"it": "Magic Origins",
+		"es": "Magic Orígenes",
+		"pt": "Magic – Origens",
+		"jp": "マジック・オリジン",
+		"cn": "万智牌：起源",
+		"ru": "Magic: Истоки",
+		"tw": "魔法風雲會：起源",
+		"ko": "매직의 기원"
+	}
+}

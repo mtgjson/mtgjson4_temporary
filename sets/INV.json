@@ -1,0 +1,17 @@
+{
+	"name" : "Invasion",
+	"code" : "INV",
+	"gathererCode" : "IN",
+	"releaseDate" : "2000-10-02",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Invasion",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Invasion",
+		"fr": "Invasion",
+		"it": "Invasione",
+		"es": "Invasión",
+		"pt": "Invasão"
+	}
+}

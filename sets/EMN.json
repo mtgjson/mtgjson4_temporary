@@ -1,0 +1,9 @@
+{
+	"name" : "Eldritch Moon",
+	"code" : "EMN",
+	"releaseDate" : "2016-07-22",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Shadows over Innistrad",
+	"booster" : [["rare", "mythic rare"], "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", ["common", ["double faced rare", "double faced mythic rare"]], ["double faced common", "double faced uncommon"], "land", "marketing"]
+}

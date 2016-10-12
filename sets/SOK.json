@@ -1,0 +1,18 @@
+{
+	"name" : "Saviors of Kamigawa",
+	"code" : "SOK",
+	"releaseDate" : "2005-06-03",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Kamigawa",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Retter von Kamigawa",
+		"fr": "Libérateurs de Kamigawa",
+		"it": "Liberatori di Kamigawa",
+		"es": "Salvadores de Kamigawa",
+		"pt": "Salvadores Kamigawa",
+		"jp": "神河救済",
+		"cn": "Saviors of Kamigawa"
+	}
+}

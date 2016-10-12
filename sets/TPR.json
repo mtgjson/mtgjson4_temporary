@@ -1,0 +1,9 @@
+{
+	"name" : "Tempest Remastered",
+	"code" : "TPR",
+	"releaseDate" : "2015-05-06",
+	"border" : "black",
+	"type" : "reprint",
+	"onlineOnly" : true,
+	"booster" : [["rare", "mythic rare"], "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "land"]
+}

@@ -1,0 +1,17 @@
+{
+	"name" : "Portal Second Age",
+	"code" : "PO2",
+	"gathererCode" : "P2",
+	"oldCode" : "P02",
+	"releaseDate" : "1998-06-01",
+	"border" : "black",
+	"type" : "starter",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Portal Zweites Zeitalter",
+		"fr": "Portal Second Age",
+		"it": "Portal Seconda Era",
+		"es": "Portal Segunda Edad",
+		"pt": "Portal Segunda Era"
+	}
+}

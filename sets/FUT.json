@@ -1,0 +1,19 @@
+{
+	"name" : "Future Sight",
+	"code" : "FUT",
+	"releaseDate" : "2007-05-04",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Time Spiral",
+	"booster" : [["rare", "timeshifted rare"], ["uncommon", "timeshifted uncommon"], ["uncommon", "timeshifted uncommon"], ["uncommon", "timeshifted uncommon"], ["common", "timeshifted common"], ["common", "timeshifted common"], ["common", "timeshifted common"], ["common", "timeshifted common"], ["common", "timeshifted common"], ["common", "timeshifted common"], ["common", "timeshifted common"], ["common", "timeshifted common"], ["common", "timeshifted common"], ["common", "timeshifted common"], ["common", "timeshifted common"]],
+	"translations": {
+		"de": "Blick in die Zukunft",
+		"fr": "Vision de l'Avenir",
+		"it": "Visione Futura",
+		"es": "Visión del Futuro",
+		"pt": "Visão do Futuro",
+		"jp": "未来予知",
+		"cn": "预知将来",
+		"ru": "Взгляд в Будущее"
+	}
+}
