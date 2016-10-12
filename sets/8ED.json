@@ -1,0 +1,16 @@
+{
+	"name" : "Eighth Edition",
+	"code" : "8ED",
+	"oldCode" : "8E",
+	"releaseDate" : "2003-07-28",
+	"border" : "white",
+	"type" : "core",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "land"],
+	"translations": {
+		"de": "Haupt-Set - Achte Edition",
+		"fr": "Édition de base - Huitième Edition",
+		"it": "Set base - Ottava Edizione",
+		"es": "Colección Básica - Octava Edición",
+		"pt": "Kit Básico - Oitava Edição"
+	}
+}

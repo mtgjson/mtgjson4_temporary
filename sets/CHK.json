@@ -1,0 +1,18 @@
+{
+	"name" : "Champions of Kamigawa",
+	"code" : "CHK",
+	"releaseDate" : "2004-10-01",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Kamigawa",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Meister von Kamigawa",
+		"fr": "Guerriers de Kamigawa",
+		"it": "Campioni di Kamigawa",
+		"es": "Campeones de Kamigawa",
+		"pt": "Campeões de Kamigawa",
+		"jp": "神河物語",
+		"cn": "神河群英录"
+	}
+}
