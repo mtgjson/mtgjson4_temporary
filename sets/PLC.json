@@ -1,0 +1,19 @@
+{
+	"name" : "Planar Chaos",
+	"code" : "PLC",
+	"releaseDate" : "2007-02-02",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Time Spiral",
+	"booster" : ["rare", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "timeshifted common", "timeshifted common", "timeshifted common", ["timeshifted rare", "timeshifted uncommon"]],
+	"translations": {
+		"de": "Weltenchaos",
+		"fr": "Chaos planaire",
+		"it": "Caos Dimensionale",
+		"es": "Caos planar",
+		"pt": "Caos Planar",
+		"jp": "次元の混乱",
+		"cn": "时空混沌",
+		"ru": "Вселенский Хаос"
+	}
+}

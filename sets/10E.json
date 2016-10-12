@@ -1,0 +1,19 @@
+{
+	"name" : "Tenth Edition",
+	"code" : "10E",
+	"releaseDate" : "2007-07-13",
+	"border" : "black",
+	"type" : "core",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "land", "marketing"],
+	"translations": {
+		"de": "Zehnte Edition",
+		"fr": "Dixième édition",
+		"it": "Decima Edizione",
+		"es": "Décima Edición",
+		"pt": "Décima Edição",
+		"jp": "第10版",
+		"cn": "第十版",
+		"ru": "Десятое Издание",
+		"tw": "Tenth Edition"
+	}
+}

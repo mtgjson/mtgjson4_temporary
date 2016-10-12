@@ -1,0 +1,14 @@
+{
+	"name" : "Duel Decks: Elspeth vs. Tezzeret",
+	"code" : "DDF",
+	"releaseDate" : "2010-09-03",
+	"border" : "black",
+	"type" : "duel deck",
+	"translations": {
+		"de": "Duel Decks: Elspeth vs. Tezzeret",
+		"fr": "Duel Decks: Elspeth vs. Tezzeret",
+		"it": "Duel Decks: Elspeth vs. Tezzeret",
+		"es": "Duel Decks: Elspeth vs. Tezzeret",
+		"jp": "Duel Decks: Elspeth vs. Tezzeret"
+	}
+}
