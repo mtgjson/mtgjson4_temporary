@@ -1,0 +1,19 @@
+{
+	"name" : "Dissension",
+	"code" : "DIS",
+	"releaseDate" : "2006-05-05",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Ravnica",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Zwietracht",
+		"fr": "Discorde",
+		"it": "Discordia",
+		"es": "Discordia",
+		"pt": "Insurreição",
+		"jp": "ディセンション",
+		"cn": "纷争",
+		"ru": "Раскол"
+	}
+}

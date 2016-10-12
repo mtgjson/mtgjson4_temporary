@@ -1,0 +1,19 @@
+{
+	"name" : "Ravnica: City of Guilds",
+	"code" : "RAV",
+	"releaseDate" : "2005-10-07",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Ravnica",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Ravnica: Stadt der Gilden",
+		"fr": "Ravnica: La Cité des Guildes",
+		"it": "Ravnica: Città delle Gilde",
+		"es": "Rávnica: Ciudad de Gremios",
+		"pt": "Ravnica: A Cidade das Guildas",
+		"jp": "ラブニカ：ギルドの都",
+		"cn": "拉尼卡公会城",
+		"ru": "Равника: Город Гильдий"
+	}
+}

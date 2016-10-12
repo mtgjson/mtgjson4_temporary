@@ -1,0 +1,21 @@
+{
+	"name" : "Ninth Edition",
+	"code" : "9ED",
+	"oldCode" : "9E",
+	"releaseDate" : "2005-07-29",
+	"border" : "white",
+	"type" : "core",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "land"],
+	"translations": {
+		"de": "Haupt-Set - Neunte Edition",
+		"fr": "Édition de base - Neuvième Edition",
+		"it": "Set base - Nona Edizione",
+		"es": "Colección Básica - Novena Edición",
+		"pt": "Kit Básico - Nona Edição",
+		"jp": "第9版",
+		"cn": "第九版",
+		"ru": "Девятая редакция",
+		"tw": "Ninth Edition",
+		"ko": "Ninth Edition'
+	}
+}

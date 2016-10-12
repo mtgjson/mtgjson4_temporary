@@ -1,0 +1,19 @@
+{
+	"name" : "Guildpact",
+	"code" : "GPT",
+	"releaseDate" : "2006-02-03",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Ravnica",
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
+	"translations": {
+		"de": "Gildenbund",
+		"fr": "Le Pacte des Guildes",
+		"it": "Il Patto delle Gilde",
+		"es": "El Pacto entre Gremios",
+		"pt": "Pacto das Guildas",
+		"jp": "ギルドパクト",
+		"cn": "十會盟",
+		"ru": "Договор Гильдий"
+	}
+}
