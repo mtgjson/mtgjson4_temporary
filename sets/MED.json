@@ -1,0 +1,9 @@
+{
+	"name" : "Masters Edition",
+	"code" : "MED",
+	"releaseDate" : "2007-09-10",
+	"border" : "black",
+	"type" : "masters",
+	"onlineOnly" : true,
+	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "land"]
+}
