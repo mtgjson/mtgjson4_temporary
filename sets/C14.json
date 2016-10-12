@@ -1,0 +1,15 @@
+{
+	"name" : "Commander 2014",
+	"code" : "C14",
+	"releaseDate" : "2014-11-07",
+	"border" : "black",
+	"type" : "commander",
+	"translations": {
+		"de": "Commander 2014 Edition",
+		"fr": "Commander 2014 Edition",
+		"it": "Commander 2014 Edition",
+		"es": "Commander 2014 Edition",
+		"jp": "Commander 2014 Edition",
+		"cn": "Commander 2014 Edition"
+	}
+}

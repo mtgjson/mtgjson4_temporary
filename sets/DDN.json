@@ -1,0 +1,10 @@
+{
+	"name" : "Duel Decks: Speed vs. Cunning",
+	"code" : "DDN",
+	"releaseDate" : "2014-09-05",
+	"border" : "black",
+	"type" : "duel deck",
+	"translations": {
+		"jp": "Duel Decks: Speed vs. Cunning"
+	}
+}
