@@ -2,10 +2,12 @@
   "name": "mtgjson",
   "version": "4.0.0",
   "author": "Sergio Moura <sergio@mtgjson.com>",
-  "contributors": [{
+  "contributors": [
+    {
       "name": "Zach Halpern",
       "email": "zoosorbs+mtgjson@gmail.com"
-  }],
+    }
+  ],
   "description": "Code for building and mantaining mtgjson.com database",
   "private": true,
   "dependencies": {
@@ -15,6 +17,8 @@
     "js-yaml": "^3.6.1",
     "moment": "^2.15.1",
     "redis": "^2.6.2",
-    "requestify": "^0.2.3"
+    "requestify": "^0.2.3",
+    "tiptoe": "^1.0.0",
+    "xml2js": "^0.4.17"
   }
 }
