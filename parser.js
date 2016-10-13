@@ -97,6 +97,42 @@ var fixText = function(blocks) {
     return(aux.join('\n'));
 };
 
+var parsePrinted = function(multiverseid, data, callback) {
+    var card = {};
+
+    var $ = cheerio.load(data);
+
+    var rightCol = $('.rightCol');
+    var colIdx = 0;
+
+    // Sanity check
+    if (rightCol.length == 0) {
+	callback(new Error("Invalid card data."));
+	return;
+    }
+
+    // In case of double-sided cards, this should always holds the front card id.
+    var frontCardIdx = $(rightCol[0]).attr('id').replace('_rightCol', '');
+    var idPrefix = $(rightCol[colIdx]).attr('id').replace('_rightCol', '');
+
+    // Retrieve card type
+    card.originalType = $('#' + idPrefix + '_typeRow .value').text().trim().replace(/  /g, ' ');
+
+    // TODO: Extract subtypes and supertypes
+	
+    // Text
+    var cardText = $('#' + idPrefix + '_textRow');
+    if (cardText.length > 0) {
+	var blocks = [];
+	$('.value div', cardText).each(function(idx, obj) {
+	    blocks.push($(obj).html());
+	});
+	card.originalText = fixText(blocks);
+    }
+
+    callback(null, card);
+};
+
 var parseOracle = function(multiverseid, data, callback) {
     var card = {};
 
@@ -260,5 +296,6 @@ var parseOracle = function(multiverseid, data, callback) {
 };
 
 module.exports = {
-    oracle: parseOracle
+    oracle: parseOracle,
+	printed: parsePrinted
 };
