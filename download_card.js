@@ -136,6 +136,12 @@ module.exports = function(multiverseid, callback) {
 
 module.exports.downloadFiles = downloadFiles;
 
+/**
+ * Callback returns two parameters
+ * err: not null if an error occurred.
+ * data: array with basic card information found on set. Each array element has the following keys:
+ *   	number, name, multiverseid, artist, color, rarity, set
+ */
 module.exports.downloadSetCardList = function(setName, callback) {
     var set = setName.replace(/ /g, '+');
     var maxpages = 1;
