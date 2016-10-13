@@ -5,8 +5,12 @@ var downloader = require('./downloader');
 var cheerio = require('cheerio');
 var hitme = require('hitme');
 var async = require('async');
+var yaml = require('js-yaml');
+var fs = require('fs');
 
-var url_prefix = 'http://gatherer.wizards.com';
+var config = yaml.safeLoad(fs.readFileSync("config.yaml", "utf8")); // Config file
+
+var url_prefix = config["mtgjson"]["base_url"];
 
 var buildUrl = function(url, parameters) {
     var ret = url_prefix + url;
