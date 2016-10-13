@@ -152,6 +152,56 @@ var parseOracle = function(multiverseid, data, callback) {
     card.type = $('#' + idPrefix + '_typeRow .value').text().trim().replace(/  /g, ' ');
 
     // TODO: Extract subtypes and supertypes
+    
+    /*
+	If the card has "Legendary Artifact Creature -- Human Wizard"
+		super = Legendary
+		types = Artifact, Creature
+		subtypes = Human, Wizard
+
+	If the card has "Artifact Creature -- Goblin Dwarf"
+		super = []
+		types = Artifact, Creature
+		subtypes = Goblin, Dwarf
+
+    */
+  
+    // These are the valid super types that a card can have
+    var VALID_SUPERTYPES = ["Basic", "Legendary", "Snow", "World", "Ongoing"];
+
+    // Split the card into the super/sub type sets
+    var cardTypes = card.type.split("—");
+    
+    card.superTypes = [];
+    card.types = [];
+    card.subTypes = [];
+
+    if (cardTypes.length > 0)
+    {
+    	// Get all of the supertypes / types
+		var eachSup = cardTypes[0].split(" ");
+		eachSup.forEach(function(x) {
+			if (x.length)
+				(VALID_SUPERTYPES.indexOf(x) != -1) ? card.superTypes.push(x) : card.types.push(x);
+		});
+
+		// If this card does have a dash, lets get the subtypes
+		if (cardTypes[1]) {
+			var eachSub = cardTypes[1].split(" ");
+			eachSub.forEach(function(x) {
+				if (x.length)
+					card.subTypes.push(x);
+			});
+		}
+	}
+
+	// Cleanup of the 3 types, as we don't want them input as empty to the final result!
+	//if (card.superTypes.length == 0)
+		delete card["superTypes"];
+	//if (card.types.length == 0)
+		delete card["types"];
+	//if (card.subTypes.length == 0)
+		delete card["subTypes"];
 
     // Text
     var cardText = $('#' + idPrefix + '_textRow');
