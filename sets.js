@@ -29,7 +29,7 @@ var set_load = function(set_code, callback) {
     fs.stat(setPath, function(err, stats) {
 	if (err) {
 	    // Check if we have instructions for the set
-	    var fallbackPath = path.join(__dirname, 'sets', set_code + '.json');
+	    var fallbackPath = path.join(__dirname, 'data', 'header_' + set_code + '.json');
 	    fs.stat(fallbackPath, function(err2, stats) {
 		if (err2) {
 		    // TODO: Create a proper error message
