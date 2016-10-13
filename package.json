@@ -2,6 +2,10 @@
   "name": "mtgjson",
   "version": "4.0.0",
   "author": "Sergio Moura <sergio@mtgjson.com>",
+  "contributors": [{
+      "name": "Zach Halpern",
+      "email": "zoosorbs+mtgjson@gmail.com"
+  }],
   "description": "Code for building and mantaining mtgjson.com database",
   "private": true,
   "dependencies": {
