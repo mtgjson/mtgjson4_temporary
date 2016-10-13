@@ -6,10 +6,10 @@ var moment = require('moment');
 // TODO: Find a better place for this
 Array.prototype.unique = function() {
     return this.reduce(function(accum, current) {
-	if (accum.indexOf(current) < 0)
-	    accum.push(current);
-	
-	return(accum);
+    if (accum.indexOf(current) < 0)
+        accum.push(current);
+    
+    return(accum);
     }, []);
 };
 
@@ -70,29 +70,29 @@ var RARITIES = {
 
 var fixText = function(blocks) {
     var parseBlock = function(block) {
-	return block
-	    .replace(/<img [^>]*alt="([^"]*)[^>]*>/g, function(img, p1) {
-		var ret = p1;
-		if (Object.keys(SYMBOLS).indexOf(p1) >= 0)
-		    ret = SYMBOLS[p1];
-		return('{' + ret + '}');
-	    })
-	    .replace(/&apos;/g, "'")  // Fix html
-	    .replace(/&quot;/g, '"')
-	    .replace(/&#x2212;/g, '−') // Minus on planeswalker cards
-	    .replace(/&#x2014;/g, '-') // Fix long dashes
-	    .replace(/<[^>]*>/g, '');
+    return block
+        .replace(/<img [^>]*alt="([^"]*)[^>]*>/g, function(img, p1) {
+        var ret = p1;
+        if (Object.keys(SYMBOLS).indexOf(p1) >= 0)
+            ret = SYMBOLS[p1];
+        return('{' + ret + '}');
+        })
+        .replace(/&apos;/g, "'")  // Fix html
+        .replace(/&quot;/g, '"')
+        .replace(/&#x2212;/g, '−') // Minus on planeswalker cards
+        .replace(/&#x2014;/g, '-') // Fix long dashes
+        .replace(/<[^>]*>/g, '');
     };
     
     var aux = [];
     if (Array.isArray(blocks)) {
-	var i;
-	for (i = 0; i < blocks.length; i++) {
-	    aux.push(parseBlock(blocks[i]));
-	}
+    var i;
+    for (i = 0; i < blocks.length; i++) {
+        aux.push(parseBlock(blocks[i]));
+    }
     }
     else
-	aux.push(parseBlock(blocks));
+    aux.push(parseBlock(blocks));
 
     return(aux.join('\n'));
 };
@@ -107,8 +107,8 @@ var parsePrinted = function(multiverseid, data, callback) {
 
     // Sanity check
     if (rightCol.length == 0) {
-	callback(new Error("Invalid card data."));
-	return;
+    callback(new Error("Invalid card data."));
+    return;
     }
 
     // In case of double-sided cards, this should always holds the front card id.
@@ -119,15 +119,15 @@ var parsePrinted = function(multiverseid, data, callback) {
     card.originalType = $('#' + idPrefix + '_typeRow .value').text().trim().replace(/  /g, ' ');
 
     // TODO: Extract subtypes and supertypes
-	
+    
     // Text
     var cardText = $('#' + idPrefix + '_textRow');
     if (cardText.length > 0) {
-	var blocks = [];
-	$('.value div', cardText).each(function(idx, obj) {
-	    blocks.push($(obj).html());
-	});
-	card.originalText = fixText(blocks);
+    var blocks = [];
+    $('.value div', cardText).each(function(idx, obj) {
+        blocks.push($(obj).html());
+    });
+    card.originalText = fixText(blocks);
     }
 
     callback(null, card);
@@ -143,8 +143,8 @@ var parseOracle = function(multiverseid, data, callback) {
 
     // Sanity check
     if (rightCol.length == 0) {
-	callback(new Error("Invalid card data."));
-	return;
+    callback(new Error("Invalid card data."));
+    return;
     }
 
     card.multiverseid = multiverseid;
@@ -160,29 +160,29 @@ var parseOracle = function(multiverseid, data, callback) {
     // Parse card mana cost
     var manaCost = $('#' + idPrefix + '_manaRow');
     if (manaCost.length > 0) {
-	var aux = [];
-	var i;
-	var manaObj = $('img', manaCost);
+    var aux = [];
+    var i;
+    var manaObj = $('img', manaCost);
 
-	for (i = 0; i < manaObj.length; i++) {
-	    var obj = manaObj[i];
-	    var cost = $(obj).attr('alt');
+    for (i = 0; i < manaObj.length; i++) {
+        var obj = manaObj[i];
+        var cost = $(obj).attr('alt');
 
-	    if (Object.keys(SYMBOLS).indexOf(cost) >= 0)
-		cost = SYMBOLS[cost];
-	    else
-		console.log("Warning: Unknown mana cost: '%s'", cost);
+        if (Object.keys(SYMBOLS).indexOf(cost) >= 0)
+        cost = SYMBOLS[cost];
+        else
+        console.log("Warning: Unknown mana cost: '%s'", cost);
 
-	    aux.push('{' + cost + '}');
-	}
+        aux.push('{' + cost + '}');
+    }
 
-	card.manacost = aux.join('');
+    card.manacost = aux.join('');
     }
 
     // Parse card converted mana cost (always from the front card)
     var cmc = $('#' + frontCardIdx + '_cmcRow');
     if (cmc.length > 0)
-	card.cmc = parseInt($('.value', cmc).text().trim());
+    card.cmc = parseInt($('.value', cmc).text().trim());
 
     // Retrieve card type
     card.type = $('#' + idPrefix + '_typeRow .value').text().trim().replace(/  /g, ' ');
@@ -190,15 +190,15 @@ var parseOracle = function(multiverseid, data, callback) {
     // TODO: Extract subtypes and supertypes
     
     /*
-	If the card has "Legendary Artifact Creature -- Human Wizard"
-		super = Legendary
-		types = Artifact, Creature
-		subtypes = Human, Wizard
+    If the card has "Legendary Artifact Creature -- Human Wizard"
+        super = Legendary
+        types = Artifact, Creature
+        subtypes = Human, Wizard
 
-	If the card has "Artifact Creature -- Goblin Dwarf"
-		super = []
-		types = Artifact, Creature
-		subtypes = Goblin, Dwarf
+    If the card has "Artifact Creature -- Goblin Dwarf"
+        super = []
+        types = Artifact, Creature
+        subtypes = Goblin, Dwarf
 
     */
   
@@ -207,69 +207,68 @@ var parseOracle = function(multiverseid, data, callback) {
 
     // Split the card into the super/sub type sets
     var cardTypes = card.type.split("—");
-    
+
     card.superTypes = [];
     card.types = [];
-    card.subTypes = [];
 
     if (cardTypes.length > 0)
     {
-    	// Get all of the supertypes / types
-		var eachSup = cardTypes[0].split(" ");
-		eachSup.forEach(function(x) {
-			if (x.length)
-				(VALID_SUPERTYPES.indexOf(x) != -1) ? card.superTypes.push(x) : card.types.push(x);
-		});
+        // Get all of the supertypes / types
+        var eachSupAndType = cardTypes[0].split(" ");
 
-		// If this card does have a dash, lets get the subtypes
-		if (cardTypes[1]) {
-			var eachSub = cardTypes[1].split(" ");
-			eachSub.forEach(function(x) {
-				if (x.length)
-					card.subTypes.push(x);
-			});
-		}
-	}
+        eachSupAndType.forEach(function(x) {
+            if (x.length)
+                (VALID_SUPERTYPES.indexOf(x) != -1) ? card.superTypes.push(x) : card.types.push(x);
+        });
 
-	// Cleanup of the 3 types, as we don't want them input as empty to the final result!
-	//if (card.superTypes.length == 0)
-		delete card["superTypes"];
-	//if (card.types.length == 0)
-		delete card["types"];
-	//if (card.subTypes.length == 0)
-		delete card["subTypes"];
+        // If this card does have a dash, lets get the subtypes
+        if (cardTypes[1]) {
+            card.subTypes = [];
+            var eachSub = cardTypes[1].split(" ");
+            eachSub.forEach(function(x) {
+                if (x.length)
+                    card.subTypes.push(x);
+            });
+        }
+    }
+
+    // Delete unused arrays
+    if (!card.superTypes.length)
+        delete card.superTypes;
+    if (!card.types.length)
+        delete card.types;
 
     // Text
     var cardText = $('#' + idPrefix + '_textRow');
     if (cardText.length > 0) {
-	var blocks = [];
-	$('.value div', cardText).each(function(idx, obj) {
-	    blocks.push($(obj).html());
-	});
-	card.text = fixText(blocks);
+    var blocks = [];
+    $('.value div', cardText).each(function(idx, obj) {
+        blocks.push($(obj).html());
+    });
+    card.text = fixText(blocks);
     }
 
     var cardFlavor = $('#' + idPrefix + '_FlavorText');
     if (cardFlavor.length > 0) {
-	var aux = [];
-	$('div', cardFlavor).each(function(idx, obj) {
-	    aux.push($(obj).text().trim());
-	});
-	card.flavor = aux.join('\n');
+    var aux = [];
+    $('div', cardFlavor).each(function(idx, obj) {
+        aux.push($(obj).text().trim());
+    });
+    card.flavor = aux.join('\n');
     }
 
     // Card Power/Toughness or Loyalty
     var cardPT = $('#' + idPrefix + '_ptRow');
     if (cardPT.length > 0) {
-	var pt = $('.value', cardPT).text().trim();
-	if (pt.indexOf('/') < 0)
-	    // Loyalty
-	    card.loyalty = pt;
-	else {
-	    pt = pt.split('/');
-	    card.power = pt[0].trim();
-	    card.toughness = pt[1].trim();
-	}
+    var pt = $('.value', cardPT).text().trim();
+    if (pt.indexOf('/') < 0)
+        // Loyalty
+        card.loyalty = pt;
+    else {
+        pt = pt.split('/');
+        card.power = pt[0].trim();
+        card.toughness = pt[1].trim();
+    }
     }
 
     // More card info
@@ -280,66 +279,66 @@ var parseOracle = function(multiverseid, data, callback) {
     // Other sets
     var cardSets = $('#' + idPrefix + '_otherSetsRow');
     if (cardSets.length > 0) {
-	card.printings = [];
-	$('img', cardSets).each(function(idx, obj) {
-	    var set = $(obj).attr('src').match(/set=([^&]*)/)[1];
-	    card.printings.push(set);
-	});
+    card.printings = [];
+    $('img', cardSets).each(function(idx, obj) {
+        var set = $(obj).attr('src').match(/set=([^&]*)/)[1];
+        card.printings.push(set);
+    });
 
-	card.printings = card.printings.unique().sort();
+    card.printings = card.printings.unique().sort();
     }
 
     // Card Number
     var cardNumber = $('#' + idPrefix + '_numberRow');
     if (cardNumber.length > 0)
-	card.number = $('.value', cardNumber).text().trim();
+    card.number = $('.value', cardNumber).text().trim();
 
     // Card Artist
     var cardArtist = $('#' + idPrefix + '_artistRow');
     if (cardArtist.length > 0)
-	card.artist = $('.value', cardArtist).text().trim();
+    card.artist = $('.value', cardArtist).text().trim();
 
     // Rulings
     var rulingsData = $('#' + idPrefix + '_rulingsContainer');
     if (rulingsData.length > 0) {
-	card.rulings = [];
-	$('tr', rulingsData).each(function(idx, obj) {
-	    var fields = $('td', obj);
-	    var date = $(fields[0]).text().trim();
+    card.rulings = [];
+    $('tr', rulingsData).each(function(idx, obj) {
+        var fields = $('td', obj);
+        var date = $(fields[0]).text().trim();
 
-	    var momentdate = moment(date, 'MM/DD/YYYY');
+        var momentdate = moment(date, 'MM/DD/YYYY');
 
-	    var content = $(fields[1]).html().trim()
-		.replace(/&#x2019;/g, "'")
-		.replace(/(&#x201C;|&#x201D)/g, '"');
-	    
-	    card.rulings.push({
-		'date': momentdate.format('YYYY-MM-DD'),
-		'text': fixText(content)
-	    });
-	});
+        var content = $(fields[1]).html().trim()
+        .replace(/&#x2019;/g, "'")
+        .replace(/(&#x201C;|&#x201D)/g, '"');
+        
+        card.rulings.push({
+        'date': momentdate.format('YYYY-MM-DD'),
+        'text': fixText(content)
+        });
+    });
     }
 
     // Calculate colors
     if (card.manacost) {
-	var matchedColors = card.manacost
-	    .match(/{[2WUBRG/]*}/g);
+    var matchedColors = card.manacost
+        .match(/{[2WUBRG/]*}/g);
 
-	if (matchedColors != null && matchedColors.length > 0) {
-	    card.colors = [];
-	    var colors = [];
-	    matchedColors.forEach(function(x) {
-		var symbol = x.replace(/[{}/]/g, '');
-		var i;
-		for (i = 0; i < symbol.length; i++) {
-		    if ('WUBRG'.indexOf(symbol[i]) >= 0)
-			colors.push(symbol[i]);
-		}
-	    });
-	    colors.unique().forEach(function(x) {
-		card.colors.push(COLORS[x]);
-	    });
-	}
+    if (matchedColors != null && matchedColors.length > 0) {
+        card.colors = [];
+        var colors = [];
+        matchedColors.forEach(function(x) {
+        var symbol = x.replace(/[{}/]/g, '');
+        var i;
+        for (i = 0; i < symbol.length; i++) {
+            if ('WUBRG'.indexOf(symbol[i]) >= 0)
+            colors.push(symbol[i]);
+        }
+        });
+        colors.unique().forEach(function(x) {
+        card.colors.push(COLORS[x]);
+        });
+    }
     }
 
     callback(null, card);
@@ -347,5 +346,5 @@ var parseOracle = function(multiverseid, data, callback) {
 
 module.exports = {
     oracle: parseOracle,
-	printed: parsePrinted
+    printed: parsePrinted
 };
