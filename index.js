@@ -9,6 +9,7 @@ var cardGrab = require('./download_card.js');
 var uuid = require('./uuid');
 var sets = require('./sets');
 var parser = require('./parser');
+var tokens = require('./tokens');
 
 function init(callback) {
     var caller = hitme.serial(callback);
@@ -29,6 +30,14 @@ var findCardInSet = function(multiverseid, set) {
     return(set.cards.find(findCB));
 };
 
+var findTokenInSet = function(name, set) {
+    var findCB = function(element, index, array) {
+	return(element.name.localeCompare(name) == 0);
+    };
+
+    return(set.tokens.find(findCB));
+};
+
 var downloadCard = function(card, callback) {
     var downloaded = null;
     tiptoe(
@@ -47,6 +56,54 @@ var downloadCard = function(card, callback) {
 	},
 	function(err) {
 	    callback(err, card);
+	}
+    );
+};
+
+var parseTokenForSet = function(setCode, callback) {
+    var SET, _tokens;
+    
+    tiptoe(
+	function() {
+	    tokens.forSet(setCode, this);
+	},
+	function(data) {
+	    _tokens = data;
+	    sets.load(setCode, this);
+	},
+	function(_SET) {
+	    SET = _SET;
+	    if (!SET.tokens) SET.tokens = [];
+	    async.each(_tokens, function(token, cb) {
+		var setToken = findTokenInSet(token.name, SET);
+		if (setToken == null) {
+		    setToken = token;
+		    SET.tokens.push(setToken);
+		    setToken['_id'] = uuid();
+		}
+
+		Object.keys(token).forEach(function(k) {
+		    setToken[k] = token[k];
+		});
+
+		// Sort keys
+		var keys = Object.keys(setToken).sort();
+		keys.forEach(function(k) {
+		    var aux = setToken[k];
+		    delete setToken[k];
+		    setToken[k] = aux;
+		});
+
+		cb();
+	    }, this);
+	},
+	function() {
+	    sets.save(SET, this);
+	},
+	function(err) {
+	    if (err) throw(err);
+	    callback();
+	    
 	}
     );
 };
@@ -72,12 +129,15 @@ var cli = {
 		},
 		function(_SET) {
 		    SET = _SET;
+		    console.log('Downloading list of cards for %s...', SET.name);
 		    cardGrab.downloadSetCardList(SET.name, this);
 		},
 		function(cards) {
 		    if (!SET.cards) {
 			SET.cards = [];
 		    }
+
+		    console.log(cards);
 		    
 		    async.eachSeries(cards, function(card, cb) {
 			var setCard = null;
@@ -99,6 +159,7 @@ var cli = {
 			}
 
 			// Download and parse rest of data.
+			console.log('Downloading files for card %s...', card.name);
 			downloadCard(setCard, cb);
 		    }, this);
 		},
@@ -112,6 +173,11 @@ var cli = {
 		}
 	    );
 	}, this);
+    },
+    'token': function() {
+	var args = Array.prototype.slice.call(arguments, 0);
+
+	async.eachSeries(args, parseTokenForSet, this);
     }
 };
 

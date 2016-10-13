@@ -167,7 +167,7 @@ module.exports.downloadSetCardList = function(setName, callback) {
 		var obj = $('.nameLink', cardItem);
 		var card = {};
 		card.number = $('.number', cardItem).html();
-		card.name = $(obj).html();
+		card.name = $(obj).html().replace(/&apos;/g, "'");
 		card.multiverseid = $(obj).attr('href').match(/multiverseid=([^&]*)/)[1];
 		card.artist = $('.artist', cardItem).html();
 		card.color = $('.color', cardItem).html();
