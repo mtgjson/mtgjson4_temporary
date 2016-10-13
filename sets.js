@@ -48,7 +48,7 @@ var set_load = function(set_code, callback) {
 var set_save = function(set, callback) {
     var setPath = path.join(__dirname, 'db', set.code + '.json');
 
-    fs.writeFile(setPath, JSON.stringify(set), 'utf-8', callback);
+    fs.writeFile(setPath, JSON.stringify(set, null, 2), 'utf-8', callback);
 };
 
 module.exports = {

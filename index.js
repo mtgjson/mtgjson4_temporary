@@ -6,6 +6,7 @@ var tiptoe = require('tiptoe');
 var config = require('./config');
 var downloader = require('./downloader');
 var cardGrab = require('./download_card.js');
+var uuid = require('./uuid');
 var sets = require('./sets');
 
 function init(callback) {
@@ -28,6 +29,14 @@ init(function(err) {
     });
 });
 */
+
+var findCardInSet = function(multiverseid, set) {
+    var findCB = function(element, index, array) {
+	return(element.multiverseid == multiverseid);
+    };
+
+    return(set.cards.find(findCB));
+};
 
 var cli = {
     'help': function() {
@@ -53,8 +62,35 @@ var cli = {
 		    cardGrab.downloadSetCardList(SET.name, this);
 		},
 		function(cards) {
-		    SET.cards = cards;
-		    console.log(cards);
+		    if (!SET.cards) {
+			SET.cards = [];
+		    }
+		    
+		    async.eachSeries(cards, function(card, cb) {
+			var setCard = null;
+			if (card.multiverseid) {
+			    setCard = findCardInSet(card.multiverseid, SET);
+			}
+
+			if (!setCard) {
+			    console.log('New card: %s', card.name);
+			    setCard = card;
+			    card['_id'] = uuid();
+			    SET.cards.push(card);
+			}
+			else {
+			    // Merge data
+			    Object.keys(card).forEach(function(key) {
+				setCard[key] = card[key];
+			    });
+			}
+
+			// TODO: Download and parse rest of data.
+			cb();
+		    }, this);
+		},
+		function() {
+		    // Save set.
 		    sets.save(SET, this);
 		},
 		function(err) {
