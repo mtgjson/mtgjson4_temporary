@@ -136,6 +136,52 @@ module.exports = function(multiverseid, callback) {
 
 module.exports.downloadFiles = downloadFiles;
 
+module.exports.downloadSetCardListCompact = function(setName, callback) {
+    var set = setName.replace(/ /g, '+');
+    var maxpages = 1;
+    
+    var ret = [];
+
+    var downloadPage = function(pagenum) {
+	var url = buildUrl('/Pages/Search/Default.aspx', { 'output': 'compact', 'set': '%5b%22' + set + '%22%5d', 'page': pagenum });
+
+	downloader.get(url).then(function(data) {
+	    var $ = cheerio.load(data.getBody());
+
+	    var pageList = $('#ctl00_ctl00_ctl00_MainContent_SubContent_topPagingControlsContainer');
+	    $('a', pageList).each(function(idx, obj) {
+		var num = parseInt($(obj).text());
+		if (num > maxpages)
+		    maxpages = num;
+	    });
+
+	    // Read the cards
+	    var checklist = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_searchResultsContainer tr.cardItem');
+	    checklist.each(function(idx, cardItem) {
+		var obj = $('.name a', cardItem);
+		var name = $(obj).html().replace(/&apos;/g, "'");
+		var printings = $('.printings a', cardItem);
+		var i;
+		for (i = 0; i < printings.length; i++) {
+		    var multiverseid = $(printings[i]).attr('href').match(/multiverseid=([^&]*)/)[1];
+		    ret.push({ 'name': name, 'multiverseid': multiverseid });
+		}
+	    });
+
+	    // Next page?
+	    pagenum++;
+	    if (pagenum < maxpages) {
+		setImmediate(downloadPage, pagenum);
+	    }
+	    else {
+		callback(null, ret);
+	    }
+	}).fail(function(data) { callback(data); });
+    };
+
+    downloadPage(0);
+};
+
 /**
  * Callback returns two parameters
  * err: not null if an error occurred.

@@ -24,7 +24,7 @@ function cleanup() {
 
 var findCardInSet = function(multiverseid, set) {
     var findCB = function(element, index, array) {
-	return(element.multiverseid == multiverseid);
+        return(element.multiverseid == multiverseid);
     };
 
     return(set.cards.find(findCB));
@@ -32,7 +32,7 @@ var findCardInSet = function(multiverseid, set) {
 
 var findTokenInSet = function(name, set) {
     var findCB = function(element, index, array) {
-	return(element.name.localeCompare(name) == 0);
+        return(element.name.localeCompare(name) == 0);
     };
 
     return(set.tokens.find(findCB));
@@ -41,22 +41,26 @@ var findTokenInSet = function(name, set) {
 var downloadCard = function(card, callback) {
     var downloaded = null;
     tiptoe(
-	function() {
-	    cardGrab.downloadFiles(card.multiverseid, this);
-	},
-	function(data) {
-	    downloaded = data;
-	    parser.oracle(card.multiverseid, data.oracle, this);
-	},
-	function(pCard) {
-	    Object.keys(pCard).forEach(function(key) {
-		card[key] = pCard[key];
-	    });
-	    this();
-	},
-	function(err) {
-	    callback(err, card);
-	}
+        function() {
+            cardGrab.downloadFiles(card.multiverseid, this);
+        },
+        function(data) {
+            downloaded = data;
+            parser.oracle(card.multiverseid, data.oracle, this.parallel());
+            parser.printed(card.multiverseid, data.printed, this.parallel());
+        },
+        function(oracleData, printedData) {
+            Object.keys(oracleData).forEach(function(key) {
+            card[key] = oracleData[key];
+            });
+            Object.keys(printedData).forEach(function (key) {
+                card[key] = printedData[key];
+            });
+            this();
+        },
+        function(err) {
+            callback(err, card);
+        }
     );
 };
 
@@ -64,59 +68,59 @@ var parseTokenForSet = function(setCode, callback) {
     var SET, _tokens;
     
     tiptoe(
-	function() {
-	    tokens.forSet(setCode, this);
-	},
-	function(data) {
-	    _tokens = data;
-	    sets.load(setCode, this);
-	},
-	function(_SET) {
-	    SET = _SET;
-	    if (!SET.tokens) SET.tokens = [];
-	    async.each(_tokens, function(token, cb) {
-		var setToken = findTokenInSet(token.name, SET);
-		if (setToken == null) {
-		    setToken = token;
-		    SET.tokens.push(setToken);
-		    setToken['_id'] = uuid();
-		}
+    function() {
+        tokens.forSet(setCode, this);
+    },
+    function(data) {
+        _tokens = data;
+        sets.load(setCode, this);
+    },
+    function(_SET) {
+        SET = _SET;
+        if (!SET.tokens) SET.tokens = [];
+        async.each(_tokens, function(token, cb) {
+        var setToken = findTokenInSet(token.name, SET);
+        if (setToken == null) {
+            setToken = token;
+            SET.tokens.push(setToken);
+            setToken['_id'] = uuid();
+        }
 
-		Object.keys(token).forEach(function(k) {
-		    setToken[k] = token[k];
-		});
+        Object.keys(token).forEach(function(k) {
+            setToken[k] = token[k];
+        });
 
-		// Sort keys
-		var keys = Object.keys(setToken).sort();
-		keys.forEach(function(k) {
-		    var aux = setToken[k];
-		    delete setToken[k];
-		    setToken[k] = aux;
-		});
+        // Sort keys
+        var keys = Object.keys(setToken).sort();
+        keys.forEach(function(k) {
+            var aux = setToken[k];
+            delete setToken[k];
+            setToken[k] = aux;
+        });
 
-		cb();
-	    }, this);
-	},
-	function() {
-	    sets.save(SET, this);
-	},
-	function(err) {
-	    if (err) throw(err);
-	    callback();
-	    
-	}
+        cb();
+        }, this);
+    },
+    function() {
+        sets.save(SET, this);
+    },
+    function(err) {
+        if (err) throw(err);
+        callback();
+        
+    }
     );
 };
 
 var cli = {
     'help': function() {
-	console.log('MTGJSON v4');
-	console.log('Available commands:');
-	Object.keys(cli).forEach(function(cmd) {
-	    console.log('  ' + cmd);
-	});
+    console.log('MTGJSON v4');
+    console.log('Available commands:');
+    Object.keys(cli).forEach(function(cmd) {
+        console.log('  ' + cmd);
+    });
 
-	this();
+    this();
     },
     'build': function() {
 	var args = Array.prototype.slice.call(arguments, 0);
@@ -130,15 +134,14 @@ var cli = {
 		function(_SET) {
 		    SET = _SET;
 		    console.log('Downloading list of cards for %s...', SET.name);
-		    cardGrab.downloadSetCardList(SET.name, this);
+		    //cardGrab.downloadSetCardList(SET.name, this);
+		    cardGrab.downloadSetCardListCompact(SET.name, this);
 		},
 		function(cards) {
 		    if (!SET.cards) {
 			SET.cards = [];
 		    }
 
-		    console.log(cards);
-		    
 		    async.eachSeries(cards, function(card, cb) {
 			var setCard = null;
 			if (card.multiverseid) {
@@ -175,9 +178,9 @@ var cli = {
 	}, this);
     },
     'token': function() {
-	var args = Array.prototype.slice.call(arguments, 0);
+    var args = Array.prototype.slice.call(arguments, 0);
 
-	async.eachSeries(args, parseTokenForSet, this);
+    async.eachSeries(args, parseTokenForSet, this);
     }
 };
 
