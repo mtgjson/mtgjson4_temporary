@@ -45,6 +45,7 @@ var set_load = function(set_code, callback) {
     });
 };
 
+// From: http://www.davekoelle.com/alphanum.html
 var sortAlphaNum = function(a,b) {
     var reA = /[^a-zA-Z]/g;
     var reN = /[^0-9]/g;
@@ -74,7 +75,9 @@ var set_save = function(set, callback) {
     var setPath = path.join(__dirname, 'db', set.code + '.json');
 
     // Sort cards
-    set.cards = set.cards.sort(sortAlphaNum);
+    set.cards = set.cards.sort(function(a, b) {
+	return(sortAlphaNum(a.number, b.number));
+    });
 
     set.cards.forEach(function(card) {
 	var aux;
