@@ -8,6 +8,7 @@ var downloader = require('./downloader');
 var cardGrab = require('./download_card.js');
 var uuid = require('./uuid');
 var sets = require('./sets');
+var parser = require('./parser');
 
 function init(callback) {
     var caller = hitme.serial(callback);
@@ -20,22 +21,34 @@ function cleanup() {
     downloader.cleanup();
 }
 
-/*
-init(function(err) {
-    if (err) throw(err);
-
-    sets.load('SHM', function(err, SET) {
-	console.log(SET);
-    });
-});
-*/
-
 var findCardInSet = function(multiverseid, set) {
     var findCB = function(element, index, array) {
 	return(element.multiverseid == multiverseid);
     };
 
     return(set.cards.find(findCB));
+};
+
+var downloadCard = function(card, callback) {
+    var downloaded = null;
+    tiptoe(
+	function() {
+	    cardGrab.downloadFiles(card.multiverseid, this);
+	},
+	function(data) {
+	    downloaded = data;
+	    parser.oracle(card.multiverseid, data.oracle, this);
+	},
+	function(pCard) {
+	    Object.keys(pCard).forEach(function(key) {
+		card[key] = pCard[key];
+	    });
+	    this();
+	},
+	function(err) {
+	    callback(err, card);
+	}
+    );
 };
 
 var cli = {
@@ -85,8 +98,8 @@ var cli = {
 			    });
 			}
 
-			// TODO: Download and parse rest of data.
-			cb();
+			// Download and parse rest of data.
+			downloadCard(setCard, cb);
 		    }, this);
 		},
 		function() {
