@@ -49,19 +49,21 @@ var set_save = function(set, callback) {
     var setPath = path.join(__dirname, 'db', set.code + '.json');
 
     // Sort cards
-    set.cards = set.cards.sort(function(a, b) {
-	return(a.number.localeCompare(b.number));
-    });
-
-    set.cards.forEach(function(card) {
-	var aux;
-	var keys = Object.keys(card).sort();
-	keys.forEach(function(key) {
-	    aux = card[key];
-	    delete card[key];
-	    card[key] = aux;
+    if (set.cards) {
+	set.cards = set.cards.sort(function(a, b) {
+	    return(a.number.localeCompare(b.number));
 	});
-    });
+
+	set.cards.forEach(function(card) {
+	    var aux;
+	    var keys = Object.keys(card).sort();
+	    keys.forEach(function(key) {
+		aux = card[key];
+		delete card[key];
+		card[key] = aux;
+	    });
+	});
+    }
 
     fs.writeFile(setPath, JSON.stringify(set, null, 2), 'utf-8', callback);
 };
