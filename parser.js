@@ -210,6 +210,7 @@ var parseOracle = function(multiverseid, data, callback) {
 
     card.superTypes = [];
     card.types = [];
+    card.subTypes = [];
 
     if (cardTypes.length > 0)
     {
@@ -223,7 +224,6 @@ var parseOracle = function(multiverseid, data, callback) {
 
         // If this card does have a dash, lets get the subtypes
         if (cardTypes[1]) {
-            card.subTypes = [];
             var eachSub = cardTypes[1].split(" ");
             eachSub.forEach(function(x) {
                 if (x.length)
@@ -237,6 +237,8 @@ var parseOracle = function(multiverseid, data, callback) {
         delete card.superTypes;
     if (!card.types.length)
         delete card.types;
+    if (!card.subTypes.length)
+        delete card.subTypes;
 
     // Text
     var cardText = $('#' + idPrefix + '_textRow');
