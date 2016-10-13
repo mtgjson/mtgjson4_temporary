@@ -130,7 +130,8 @@ var cli = {
 		function(_SET) {
 		    SET = _SET;
 		    console.log('Downloading list of cards for %s...', SET.name);
-		    cardGrab.downloadSetCardList(SET.name, this);
+		    //cardGrab.downloadSetCardList(SET.name, this);
+		    cardGrab.downloadSetCardListCompact(SET.name, this);
 		},
 		function(cards) {
 		    if (!SET.cards) {
