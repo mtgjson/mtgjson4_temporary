@@ -7,41 +7,41 @@ var set_cache = {};
 
 var set_load = function(set_code, callback) {
     if (Object.keys(set_cache).indexOf(set_code) >= 0) {
-	callback(null, set_cache[set_code]);
-	return;
+    callback(null, set_cache[set_code]);
+    return;
     }
 
     var setPath = path.join(__dirname, 'db', set_code + '.json');
 
     var getData = function(path) {
-	fs.readFile(path, function(err, data) {
-	    if (err) {
-		callback(err);
-		return;
-	    }
+    fs.readFile(path, function(err, data) {
+        if (err) {
+        callback(err);
+        return;
+        }
 
-	    set_cache[set_code] = JSON.parse(data);
-	    callback(null, set_cache[set_code]);
-	});
+        set_cache[set_code] = JSON.parse(data);
+        callback(null, set_cache[set_code]);
+    });
     };
 
     // Check if we have a database with this code
     fs.stat(setPath, function(err, stats) {
-	if (err) {
-	    // Check if we have instructions for the set
-	    var fallbackPath = path.join(__dirname, 'data', 'header_' + set_code + '.json');
-	    fs.stat(fallbackPath, function(err2, stats) {
-		if (err2) {
-		    // TODO: Create a proper error message
-		    callback(err2);
-		    return;
-		}
-		getData(fallbackPath);
-	    });
-	    return;
-	}
-	
-	getData(setPath);
+    if (err) {
+        // Check if we have instructions for the set
+        var fallbackPath = path.join(__dirname, 'data', 'header_' + set_code + '.json');
+        fs.stat(fallbackPath, function(err2, stats) {
+        if (err2) {
+            // TODO: Create a proper error message
+            callback(err2);
+            return;
+        }
+        getData(fallbackPath);
+        });
+        return;
+    }
+    
+    getData(setPath);
     });
 };
 
@@ -77,19 +77,19 @@ var set_save = function(set, callback) {
     // Sort cards
 
     if (set.cards) {
-	set.cards = set.cards.sort(function(a, b) {
-	    return(sortAlphaNum(a.number, b.number));
-	});
+    set.cards = set.cards.sort(function(a, b) {
+        return(sortAlphaNum(a.number, b.number));
+    });
 
-	set.cards.forEach(function(card) {
-	    var aux;
-	    var keys = Object.keys(card).sort();
-	    keys.forEach(function(key) {
-		aux = card[key];
-		delete card[key];
-		card[key] = aux;
-	    });
-	});
+    set.cards.forEach(function(card) {
+        var aux;
+        var keys = Object.keys(card).sort();
+        keys.forEach(function(key) {
+        aux = card[key];
+        delete card[key];
+        card[key] = aux;
+        });
+    });
     }
 
     fs.writeFile(setPath, JSON.stringify(set, null, 2), 'utf-8', callback);
