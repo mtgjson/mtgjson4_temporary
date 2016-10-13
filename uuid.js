@@ -19,11 +19,11 @@ if (require.main == module) {
     //console.log(process.argv);
 
     if (process.argv.length >= 3)
-    count = parseInt(process.argv[2]);
+        count = parseInt(process.argv[2]);
 
     if (count < 1)
-    count = 1;
+        count = 1;
 
     for (var i = 0; i < count; i++)
-    console.log(uuid());
+        console.log(uuid());
 }

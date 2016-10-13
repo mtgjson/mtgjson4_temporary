@@ -86,13 +86,13 @@ var fixText = function(blocks) {
     
     var aux = [];
     if (Array.isArray(blocks)) {
-    var i;
-    for (i = 0; i < blocks.length; i++) {
-        aux.push(parseBlock(blocks[i]));
-    }
+        var i;
+        for (i = 0; i < blocks.length; i++) {
+            aux.push(parseBlock(blocks[i]));
+        }
     }
     else
-    aux.push(parseBlock(blocks));
+        aux.push(parseBlock(blocks));
 
     return(aux.join('\n'));
 };
@@ -107,8 +107,8 @@ var parsePrinted = function(multiverseid, data, callback) {
 
     // Sanity check
     if (rightCol.length == 0) {
-    callback(new Error("Invalid card data."));
-    return;
+        callback(new Error("Invalid card data."));
+        return;
     }
 
     // In case of double-sided cards, this should always holds the front card id.
@@ -123,10 +123,10 @@ var parsePrinted = function(multiverseid, data, callback) {
     // Text
     var cardText = $('#' + idPrefix + '_textRow');
     if (cardText.length > 0) {
-    var blocks = [];
-    $('.value div', cardText).each(function(idx, obj) {
-        blocks.push($(obj).html());
-    });
+        var blocks = [];
+        $('.value div', cardText).each(function(idx, obj) {
+            blocks.push($(obj).html());
+        });
     card.originalText = fixText(blocks);
     }
 
@@ -143,8 +143,8 @@ var parseOracle = function(multiverseid, data, callback) {
 
     // Sanity check
     if (rightCol.length == 0) {
-    callback(new Error("Invalid card data."));
-    return;
+        callback(new Error("Invalid card data."));
+        return;
     }
 
     card.multiverseid = multiverseid;
@@ -160,29 +160,29 @@ var parseOracle = function(multiverseid, data, callback) {
     // Parse card mana cost
     var manaCost = $('#' + idPrefix + '_manaRow');
     if (manaCost.length > 0) {
-    var aux = [];
-    var i;
-    var manaObj = $('img', manaCost);
+        var aux = [];
+        var i;
+        var manaObj = $('img', manaCost);
 
-    for (i = 0; i < manaObj.length; i++) {
-        var obj = manaObj[i];
-        var cost = $(obj).attr('alt');
+        for (i = 0; i < manaObj.length; i++) {
+            var obj = manaObj[i];
+            var cost = $(obj).attr('alt');
 
-        if (Object.keys(SYMBOLS).indexOf(cost) >= 0)
-        cost = SYMBOLS[cost];
-        else
-        console.log("Warning: Unknown mana cost: '%s'", cost);
+            if (Object.keys(SYMBOLS).indexOf(cost) >= 0)
+            cost = SYMBOLS[cost];
+            else
+            console.log("Warning: Unknown mana cost: '%s'", cost);
 
-        aux.push('{' + cost + '}');
-    }
+            aux.push('{' + cost + '}');
+        }
 
-    card.manacost = aux.join('');
+        card.manacost = aux.join('');
     }
 
     // Parse card converted mana cost (always from the front card)
     var cmc = $('#' + frontCardIdx + '_cmcRow');
     if (cmc.length > 0)
-    card.cmc = parseInt($('.value', cmc).text().trim());
+        card.cmc = parseInt($('.value', cmc).text().trim());
 
     // Retrieve card type
     card.type = $('#' + idPrefix + '_typeRow .value').text().trim().replace(/  /g, ' ');
@@ -243,34 +243,34 @@ var parseOracle = function(multiverseid, data, callback) {
     // Text
     var cardText = $('#' + idPrefix + '_textRow');
     if (cardText.length > 0) {
-    var blocks = [];
-    $('.value div', cardText).each(function(idx, obj) {
-        blocks.push($(obj).html());
-    });
-    card.text = fixText(blocks);
+        var blocks = [];
+        $('.value div', cardText).each(function(idx, obj) {
+            blocks.push($(obj).html());
+        });
+        card.text = fixText(blocks);
     }
 
     var cardFlavor = $('#' + idPrefix + '_FlavorText');
     if (cardFlavor.length > 0) {
-    var aux = [];
-    $('div', cardFlavor).each(function(idx, obj) {
-        aux.push($(obj).text().trim());
-    });
-    card.flavor = aux.join('\n');
+        var aux = [];
+        $('div', cardFlavor).each(function(idx, obj) {
+            aux.push($(obj).text().trim());
+        });
+        card.flavor = aux.join('\n');
     }
 
     // Card Power/Toughness or Loyalty
     var cardPT = $('#' + idPrefix + '_ptRow');
     if (cardPT.length > 0) {
-    var pt = $('.value', cardPT).text().trim();
-    if (pt.indexOf('/') < 0)
-        // Loyalty
-        card.loyalty = pt;
-    else {
-        pt = pt.split('/');
-        card.power = pt[0].trim();
-        card.toughness = pt[1].trim();
-    }
+        var pt = $('.value', cardPT).text().trim();
+        if (pt.indexOf('/') < 0) // Loyalty
+            card.loyalty = pt;
+        else
+        {
+            pt = pt.split('/');
+            card.power = pt[0].trim();
+            card.toughness = pt[1].trim();
+        }
     }
 
     // More card info
@@ -281,66 +281,66 @@ var parseOracle = function(multiverseid, data, callback) {
     // Other sets
     var cardSets = $('#' + idPrefix + '_otherSetsRow');
     if (cardSets.length > 0) {
-    card.printings = [];
-    $('img', cardSets).each(function(idx, obj) {
-        var set = $(obj).attr('src').match(/set=([^&]*)/)[1];
-        card.printings.push(set);
-    });
+        card.printings = [];
+        $('img', cardSets).each(function(idx, obj) {
+            var set = $(obj).attr('src').match(/set=([^&]*)/)[1];
+            card.printings.push(set);
+        });
 
-    card.printings = card.printings.unique().sort();
+        card.printings = card.printings.unique().sort();
     }
 
     // Card Number
     var cardNumber = $('#' + idPrefix + '_numberRow');
     if (cardNumber.length > 0)
-    card.number = $('.value', cardNumber).text().trim();
+        card.number = $('.value', cardNumber).text().trim();
 
     // Card Artist
     var cardArtist = $('#' + idPrefix + '_artistRow');
     if (cardArtist.length > 0)
-    card.artist = $('.value', cardArtist).text().trim();
+        card.artist = $('.value', cardArtist).text().trim();
 
     // Rulings
     var rulingsData = $('#' + idPrefix + '_rulingsContainer');
     if (rulingsData.length > 0) {
-    card.rulings = [];
-    $('tr', rulingsData).each(function(idx, obj) {
-        var fields = $('td', obj);
-        var date = $(fields[0]).text().trim();
+        card.rulings = [];
+        $('tr', rulingsData).each(function(idx, obj) {
+            var fields = $('td', obj);
+            var date = $(fields[0]).text().trim();
 
-        var momentdate = moment(date, 'MM/DD/YYYY');
+            var momentdate = moment(date, 'MM/DD/YYYY');
 
-        var content = $(fields[1]).html().trim()
-        .replace(/&#x2019;/g, "'")
-        .replace(/(&#x201C;|&#x201D)/g, '"');
-        
-        card.rulings.push({
-        'date': momentdate.format('YYYY-MM-DD'),
-        'text': fixText(content)
+            var content = $(fields[1]).html().trim()
+            .replace(/&#x2019;/g, "'")
+            .replace(/(&#x201C;|&#x201D)/g, '"');
+            
+            card.rulings.push({
+            'date': momentdate.format('YYYY-MM-DD'),
+            'text': fixText(content)
+            });
         });
-    });
     }
 
     // Calculate colors
     if (card.manacost) {
-    var matchedColors = card.manacost
-        .match(/{[2WUBRG/]*}/g);
+        var matchedColors = card.manacost
+            .match(/{[2WUBRG/]*}/g);
 
-    if (matchedColors != null && matchedColors.length > 0) {
-        card.colors = [];
-        var colors = [];
-        matchedColors.forEach(function(x) {
-        var symbol = x.replace(/[{}/]/g, '');
-        var i;
-        for (i = 0; i < symbol.length; i++) {
-            if ('WUBRG'.indexOf(symbol[i]) >= 0)
-            colors.push(symbol[i]);
+        if (matchedColors != null && matchedColors.length > 0) {
+            card.colors = [];
+            var colors = [];
+            matchedColors.forEach(function(x) {
+                var symbol = x.replace(/[{}/]/g, '');
+                var i;
+                for (i = 0; i < symbol.length; i++) {
+                    if ('WUBRG'.indexOf(symbol[i]) >= 0)
+                        colors.push(symbol[i]);
+                }
+                });
+            colors.unique().forEach(function(x) {
+                card.colors.push(COLORS[x]);
+            });
         }
-        });
-        colors.unique().forEach(function(x) {
-        card.colors.push(COLORS[x]);
-        });
-    }
     }
 
     callback(null, card);

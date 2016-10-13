@@ -25,7 +25,7 @@ var fixTokenStructure = function(_token) {
     });
     
     if (Array.isArray(token.name))
-    token.name = token.name[0];
+        token.name = token.name[0];
 
     token.name = token.name.trim();
 
@@ -45,25 +45,25 @@ var fixTokenStructure = function(_token) {
     delete token.token;
 
     if (token.text && Array.isArray(token.text))
-    token.text = token.text[0];
+        token.text = token.text[0];
 
     if (token.text == '')
-    delete(token.text);
+        delete(token.text);
 
     token.type = token.type[0];
     if (token.pt && token.pt[0] != "") {
-    var pt = token.pt[0].split('/');
-    token.power = pt[0];
-    token.toughness = pt[1];
+        var pt = token.pt[0].split('/');
+        token.power = pt[0];
+        token.toughness = pt[1];
     }
     delete token.pt;
 
     // Sort keys
     var keys = Object.keys(token).sort();
     keys.forEach(function(k) {
-    var aux = token[k];
-    delete token[k];
-    token[k] = aux;
+        var aux = token[k];
+        delete token[k];
+        token[k] = aux;
     });
 
     return(token);
@@ -87,7 +87,7 @@ var forSet = function(setCode, callback) {
         });
 
         if (inSet)
-        ret.push(token);
+            ret.push(token);
     });
 
     callback(null, ret);

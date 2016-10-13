@@ -139,7 +139,7 @@ var cli = {
         },
         function(cards) {
             if (!SET.cards) {
-            SET.cards = [];
+                SET.cards = [];
             }
 
             async.eachSeries(cards, function(card, cb) {
@@ -157,7 +157,7 @@ var cli = {
             else {
                 // Merge data
                 Object.keys(card).forEach(function(key) {
-                setCard[key] = card[key];
+                    setCard[key] = card[key];
                 });
             }
 
