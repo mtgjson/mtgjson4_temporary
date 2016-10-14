@@ -13,8 +13,20 @@ var tokens = require('./tokens');
 
 function init(callback) {
     var caller = hitme.serial(callback);
+    // Loads the configuration
     caller(config.load);
-    caller(function(cb) { downloader.init(config.cache, cb); });
+
+    // Initializes the downloader module with the configuration loaded.
+    caller(function(cb) {
+        downloader.init(config.cache, cb);
+    });
+
+    // Setup URL prefix for downloading
+    caller(function(cb) {
+        if (config.mtgjson.base_url)
+            cardGrab.url_prefix = config.mtgjson.base_url
+        cb();
+    });
 }
 
 function cleanup() {
