@@ -6,20 +6,18 @@ var cheerio = require('cheerio');
 var hitme = require('hitme');
 var async = require('async');
 
-var url_prefix = 'http://gatherer.wizards.com';
-
 var buildUrl = function(url, parameters) {
-    var ret = url_prefix + url;
+    var ret = module.exports.url_prefix + url;
     if (parameters) {
     var keys = Object.keys(parameters).sort();
     var aux = [];
-    
+
     keys.forEach(function(key) {
         var value = parameters[key];
         if (typeof(value) == 'string') {
         value = value.replace(/ /g, '+');
         }
-        
+
         aux.push(key + '=' + value);
     });
     ret += '?' + aux.join('&');
@@ -134,12 +132,14 @@ module.exports = function(multiverseid, callback) {
     });
 };
 
+module.exports.url_prefix = 'http://gatherer.wizards.com';
+
 module.exports.downloadFiles = downloadFiles;
 
 module.exports.downloadSetCardListCompact = function(setName, callback) {
     var set = setName.replace(/ /g, '+');
     var maxpages = 1;
-    
+
     var ret = [];
 
     var downloadPage = function(pagenum) {
