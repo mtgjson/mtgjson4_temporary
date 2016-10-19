@@ -61,8 +61,9 @@ tiptoe(
         parser.oracle(card.multiverseid, data.oracle, this.parallel());
         parser.printed(card.multiverseid, data.printed, this.parallel());
         parser.legalities(data.printings, this.parallel());
+        parser.printings(data.printings, this.parallel());
     },
-    function(oracleData, printedData, legalities) {
+    function(oracleData, printedData, legalities, printings) {
 	Object.keys(oracleData).forEach(function(key) {
 	    card[key] = oracleData[key];
 	});
@@ -71,6 +72,7 @@ tiptoe(
         });
 
         card.legalities = legalities;
+        card.printings = printings;
         this();
     },
     function(err) {

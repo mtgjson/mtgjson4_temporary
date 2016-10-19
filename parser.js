@@ -2,6 +2,7 @@
 
 var cheerio = require('cheerio');
 var moment = require('moment');
+var async = require('async');
 
 // TODO: Find a better place for this
 Array.prototype.unique = function() {
@@ -363,8 +364,28 @@ var parseLegalities = function(data, callback) {
     callback(null, legalities);
 };
 
+var parsePrintings = function(data, callback) {
+    var printings = [];
+
+    async.each(
+        data,
+        function(page, cb) {
+            var $ = cheerio.load(page);
+            var printings_table = $('table')[0];
+            $('.cardItem', printings_table).each(function(idx, item) {
+                printings.push($('.column2 img', item).attr('src').match(/set=([^&]*)/)[1].trim());
+            });
+            cb();
+        },
+        function() {
+            callback(null, printings.unique());
+        }
+    );
+};
+
 module.exports = {
     oracle: parseOracle,
     printed: parsePrinted,
-    legalities: parseLegalities
+    legalities: parseLegalities,
+    printings: parsePrintings
 };
