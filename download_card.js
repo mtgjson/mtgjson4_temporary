@@ -28,16 +28,16 @@ var buildUrl = function(url, parameters) {
 
 var downloadFiles = function(multiverseid, callback) {
     var oracleUrl = buildUrl(
-    '/Pages/Card/Details.aspx',
-    { 'printed': 'false', 'multiverseid': multiverseid }
+        '/Pages/Card/Details.aspx',
+        { 'printed': 'false', 'multiverseid': multiverseid }
     );
     var printedUrl = buildUrl(
-    '/Pages/Card/Details.aspx',
-    { 'printed': 'true', 'multiverseid': multiverseid }
+        '/Pages/Card/Details.aspx',
+        { 'printed': 'true', 'multiverseid': multiverseid }
     );
 
     var ret = {
-    multiverseid: multiverseid,
+        multiverseid: multiverseid,
         languages: [],
         printings: []
     };
@@ -46,9 +46,9 @@ var downloadFiles = function(multiverseid, callback) {
     caller.data = ret;
 
     caller(function(cb) {
-    downloader.get(oracleUrl).then(function(data) {
+        downloader.get(oracleUrl).then(function(data) {
             ret.oracle = data.getBody();
-        cb();
+            cb();
         }).fail(function(data) { callback(data); });
     });
     caller(function(cb) {
@@ -63,7 +63,10 @@ var downloadFiles = function(multiverseid, callback) {
         var maxPage = 1;
         if (grabPrintings.maxPage)
             maxPage = grabPrintings.maxPage;
-	var url = buildUrl('/Pages/Card/Printings.aspx', { 'page' : page, 'multiverseid': multiverseid });
+	var url = buildUrl(
+            '/Pages/Card/Printings.aspx',
+            { 'page' : page, 'multiverseid': multiverseid }
+        );
 
 	downloader.get(url).then(function(data) {
             ret.printings.push(data.getBody());
@@ -92,20 +95,23 @@ var downloadFiles = function(multiverseid, callback) {
         var maxPage = 1;
         if (grabLanguages.maxPage)
             maxPage = grabLanguages.maxPage;
-        var url = buildUrl('/Pages/Card/Languages.aspx', { 'page': page, 'multiverseid': multiverseid });
+        var url = buildUrl(
+            '/Pages/Card/Languages.aspx',
+            { 'page': page, 'multiverseid': multiverseid }
+        );
 
-    downloader.get(url).then(function(data) {
+        downloader.get(url).then(function(data) {
             ret.languages.push(data.getBody());
 
-        var $ = cheerio.load(data.getBody());
-        var pages = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_languageList_pagingControls');
-        if (pages.length > 0) {
-        $('a', pages).each(function(idx, obj) {
-            var n = parseInt($(obj).text().trim());
-            if (n > maxPage)
-            maxPage = n;
-        });
-        }
+            var $ = cheerio.load(data.getBody());
+            var pages = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_languageList_pagingControls');
+            if (pages.length > 0) {
+                $('a', pages).each(function(idx, obj) {
+                    var n = parseInt($(obj).text().trim());
+                    if (n > maxPage)
+                        maxPage = n;
+                });
+            }
 
             page++;
             grabLanguages.maxPage = maxPage;
@@ -113,7 +119,7 @@ var downloadFiles = function(multiverseid, callback) {
                 setImmediate(grabLanguages, page, callback);
             else
                 callback();
-    }).fail(function(data) { callback(data); });
+        }).fail(function(data) { callback(data); });
     };
 
     caller(function(cb) {

@@ -51,34 +51,40 @@ var findTokenInSet = function(name, set) {
 };
 
 var downloadCard = function(card, callback) {
-var downloaded = null;
-tiptoe(
-    function() {
-        cardGrab.downloadFiles(card.multiverseid, this);
-    },
-    function(data) {
-        downloaded = data;
-        parser.oracle(card.multiverseid, data.oracle, this.parallel());
-        parser.printed(card.multiverseid, data.printed, this.parallel());
-        parser.legalities(data.printings, this.parallel());
-        parser.printings(data.printings, this.parallel());
-    },
-    function(oracleData, printedData, legalities, printings) {
-	Object.keys(oracleData).forEach(function(key) {
-	    card[key] = oracleData[key];
-	});
-	Object.keys(printedData).forEach(function (key) {
-            card[key] = printedData[key];
-        });
+    var downloaded = null;
+    tiptoe(
+        // Download all the card information
+        function() {
+            cardGrab.downloadFiles(card.multiverseid, this);
+        },
+        // Parse each section of the downloaded data
+        function(data) {
+            downloaded = data;
+            parser.oracle(card.multiverseid, data.oracle, this.parallel());
+            parser.printed(card.multiverseid, data.printed, this.parallel());
+            parser.legalities(data.printings, this.parallel());
+            parser.printings(data.printings, this.parallel());
+            parser.languages(data.languages, this.parallel());
+        },
+        // Aggregate each parsed information to the card object
+        function(oracleData, printedData, legalities, printings, languages) {
+	    Object.keys(oracleData).forEach(function(key) {
+	        card[key] = oracleData[key];
+	    });
+	    Object.keys(printedData).forEach(function (key) {
+                card[key] = printedData[key];
+            });
 
-        card.legalities = legalities;
-        card.printings = printings;
-        this();
-    },
-    function(err) {
-        callback(err, card);
-    }
-);
+            card.legalities = legalities;
+            card.printings = printings;
+            card.foreignNames = languages;
+            this();
+        },
+        // Send card (or error) to the callback
+        function(err) {
+            callback(err, card);
+        }
+    );
 };
 
 var parseTokenForSet = function(setCode, callback) {
