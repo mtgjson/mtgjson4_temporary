@@ -383,9 +383,34 @@ var parsePrintings = function(data, callback) {
     );
 };
 
+var parseLanguages = function(data, callback) {
+    var languages = [];
+
+    async.each(
+        data,
+        function(page, cb) {
+            var $ = cheerio.load(page);
+            $('table .cardItem').each(function(idx, item) {
+                var obj = {};
+                var cells = $('td', item);
+                obj.name = $(cells[1]).text().trim();
+                obj.language = $('a', cells[0]).text().trim();
+                obj.multiverseid = parseInt($('a', cells[0]).attr('href').match(/multiverseid=([^&]*)/)[1].trim());
+                languages.push(obj);
+            });
+
+            cb();
+        },
+        function() {
+            callback(null, languages);
+        }
+    );
+};
+
 module.exports = {
     oracle: parseOracle,
     printed: parsePrinted,
     legalities: parseLegalities,
-    printings: parsePrintings
+    printings: parsePrintings,
+    languages: parseLanguages
 };
