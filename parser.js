@@ -147,6 +147,7 @@ var parseOracle = function(multiverseid, data, callback) {
         return;
     }
 
+    card._title = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_subtitleDisplay').text().trim();
     card.multiverseid = multiverseid;
     card.layout = 'normal';
 
@@ -212,8 +213,7 @@ var parseOracle = function(multiverseid, data, callback) {
     card.types = [];
     card.subTypes = [];
 
-    if (cardTypes.length > 0)
-    {
+    if (cardTypes.length > 0) {
         // Get all of the supertypes / types
         var eachSupAndType = cardTypes[0].split(" ");
 
