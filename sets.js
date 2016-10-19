@@ -3,6 +3,8 @@
 var fs = require('fs');
 var path = require('path');
 
+var uuid = require('./uuid');
+
 var set_cache = {};
 
 var set_load = function(set_code, callback) {
@@ -40,13 +42,13 @@ var set_load = function(set_code, callback) {
         });
         return;
     }
-    
+
     getData(setPath);
     });
 };
 
 // From: http://www.davekoelle.com/alphanum.html
-var sortAlphaNum = function(a,b) {
+var sortAlphaNum = function(a, b) {
     var reA = /[^a-zA-Z]/g;
     var reN = /[^0-9]/g;
     var AInt = parseInt(a, 10);
@@ -62,11 +64,14 @@ var sortAlphaNum = function(a,b) {
         } else {
             return aA > bA ? 1 : -1;
         }
-    }else if(isNaN(AInt)){//A is not an Int
+    }
+    else if(isNaN(AInt)) {//A is not an Int
         return 1; //to make alphanumeric sort first return -1 here
-    }else if(isNaN(BInt)){//B is not an Int
+    }
+    else if(isNaN(BInt)) {//B is not an Int
         return -1; //to make alphanumeric sort first return 1 here
-    }else{
+    }
+    else{
         return AInt > BInt ? 1 : -1;
     }
 };
@@ -95,7 +100,68 @@ var set_save = function(set, callback) {
     fs.writeFile(setPath, JSON.stringify(set, null, 2), 'utf-8', callback);
 };
 
+/**
+ * Adds a given card to the set, checking if the card is new and adding any needed information
+ */
+var set_add = function(set, card, callback) {
+    if (!card.name) {
+        console.error("The card has no name.");
+        throw new Error('Invalid card: ' + JSON.stringify(card));
+    }
+
+    if (card._id) {
+        // Card already has an id. Let's do a sanity check.
+        // TODO: Sanity check
+    }
+
+    if (card._title) {
+        // Check if we're consistent. Make actions if we're not.
+
+        // delete card._title;
+    }
+
+    // TODO: We're currently assumming all cards have multiverse id.
+    var setCard = findCardInSet(card.multiverseid, card.name, set);
+    if (!setCard) {
+        setCard = {};
+        setCard._id = uuid();
+        set.cards.push(setCard);
+    }
+
+    // Merge
+    var keys = Object.keys(card);
+    keys.forEach(function(key) {
+        setCard[key] = card[key];
+    });
+
+    // TODO: Any set-specific corrections
+
+    if (callback && typeof(callback) === 'function')
+        setImmediate(callback, null, setCard);
+
+    return(setCard);
+};
+
+var findCardInSet = function(multiverseid, name, set) {
+    var findCB = function(element, index, array) {
+        return(element.multiverseid == multiverseid && element.name == name);
+    };
+
+    return(set.cards.find(findCB));
+};
+
+var findTokenInSet = function(name, set) {
+    var findCB = function(element, index, array) {
+        return(element.name.localeCompare(name) == 0);
+    };
+
+    return(set.tokens.find(findCB));
+};
+
 module.exports = {
     load: set_load,
-    save: set_save
+    save: set_save,
+    add: set_add,
+    findCard: findCardInSet,
+    findToken: findTokenInSet
 };
