@@ -123,10 +123,19 @@ var set_add = function(set, card, callback) {
             card.layout = 'flip';
             card.names = [ card._title, card.name ];
 
-            var otherCard = findCardInSetByName(card._title, set);
+            if ('ab'.indexOf(card.number.substr(-1)) == -1)
+                card.number = card.number + 'b';
 
-            otherCard.layout = 'flip';
-            otherCard.names = card.names;
+            var otherCard = findCardInSetByName(card._title, set);
+            if (otherCard == null) {
+                console.log("Card %s is not yet on the database. Re-run the fetch.", card._title);
+            }
+            else {
+                otherCard.layout = 'flip';
+                otherCard.names = card.names;
+                if ('ab'.indexOf(otherCard.number.substr(-1)) == -1)
+                    otherCard.number = otherCard.number + 'a';
+            }
         }
     }
 
@@ -140,7 +149,8 @@ var set_add = function(set, card, callback) {
 
     // The persistent keys are not replaced if they are already on the destination object.
     var persistentKeys = [
-        'layout'
+        'layout',
+        'number'
     ];
     var keys = Object.keys(card);
     keys.forEach(function(key) {
@@ -153,7 +163,9 @@ var set_add = function(set, card, callback) {
 
     // Delete unused/internal fields
     [
-        '_title'
+        '_title',
+        'special',
+        'set'
     ]
         .forEach(function(key) {
             delete(setCard[key]);
