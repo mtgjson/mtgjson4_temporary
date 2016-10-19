@@ -169,7 +169,7 @@ module.exports.downloadSetCardListCompact = function(setName, callback) {
         var printings = $('.printings a', cardItem);
         var i;
         for (i = 0; i < printings.length; i++) {
-            var multiverseid = $(printings[i]).attr('href').match(/multiverseid=([^&]*)/)[1];
+            var multiverseid = parseInt($(printings[i]).attr('href').match(/multiverseid=([^&]*)/)[1]);
             ret.push({ 'name': name, 'multiverseid': multiverseid });
         }
         });
@@ -201,42 +201,42 @@ module.exports.downloadSetCardList = function(setName, callback) {
     var ret = [];
 
     var downloadPage = function(pagenum) {
-    var url = buildUrl('/Pages/Search/Default.aspx', { 'output': 'checklist', 'set': '%5b%22' + set + '%22%5d', 'page': pagenum });
+        var url = buildUrl('/Pages/Search/Default.aspx', { 'output': 'checklist', 'set': '%5b%22' + set + '%22%5d', 'page': pagenum });
 
-    downloader.get(url).then(function(data) {
-        var $ = cheerio.load(data.getBody());
+        downloader.get(url).then(function(data) {
+            var $ = cheerio.load(data.getBody());
 
-        var pageList = $('#ctl00_ctl00_ctl00_MainContent_SubContent_topPagingControlsContainer');
-        $('a', pageList).each(function(idx, obj) {
-        var num = parseInt($(obj).text());
-        if (num > maxpages)
-            maxpages = num;
-        });
+            var pageList = $('#ctl00_ctl00_ctl00_MainContent_SubContent_topPagingControlsContainer');
+            $('a', pageList).each(function(idx, obj) {
+                var num = parseInt($(obj).text());
+                if (num > maxpages)
+                    maxpages = num;
+            });
 
-        // Read the cards
-        var checklist = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_searchResultsContainer tr.cardItem');
-        checklist.each(function(idx, cardItem) {
-        var obj = $('.nameLink', cardItem);
-        var card = {};
-        card.number = $('.number', cardItem).html();
-        card.name = $(obj).html().replace(/&apos;/g, "'");
-        card.multiverseid = $(obj).attr('href').match(/multiverseid=([^&]*)/)[1];
-        card.artist = $('.artist', cardItem).html();
-        card.color = $('.color', cardItem).html();
-        card.rarity = $('.rarity', cardItem).html();
-        card.set = $('.set', cardItem).html();
-        ret.push(card);
-        });
+            // Read the cards
+            var checklist = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_searchResultsContainer tr.cardItem');
+            checklist.each(function(idx, cardItem) {
+                var obj = $('.nameLink', cardItem);
+                var card = {};
+                card.number = $('.number', cardItem).html();
+                card.name = $(obj).html().replace(/&apos;/g, "'");
+                card.multiverseid = parseInt($(obj).attr('href').match(/multiverseid=([^&]*)/)[1]);
+                card.artist = $('.artist', cardItem).html();
+                card.color = $('.color', cardItem).html();
+                card.rarity = $('.rarity', cardItem).html();
+                card.set = $('.set', cardItem).html();
+                ret.push(card);
+            });
 
-        // Next page?
-        pagenum++;
-        if (pagenum < maxpages) {
-        setImmediate(downloadPage, pagenum);
-        }
-        else {
-        callback(null, ret);
-        }
-    }).fail(function(data) { callback(data); });
+            // Next page?
+            pagenum++;
+            if (pagenum < maxpages) {
+                setImmediate(downloadPage, pagenum);
+            }
+            else {
+                callback(null, ret);
+            }
+        }).fail(function(data) { callback(data); });
     };
 
     downloadPage(0);
@@ -264,28 +264,31 @@ module.exports.downloadAllSetsInfo = function(callback) {
     async.eachSeries(
         setNames,
         function(set, cb) {
-        var setUrl = buildUrl('/Pages/Search/Default.aspx', { output: 'standard', set: '%5b%22' + set + '%22%5d' });
+            var setUrl = buildUrl(
+                '/Pages/Search/Default.aspx',
+                { output: 'standard', set: '%5b%22' + set + '%22%5d' }
+            );
 
-        downloader.get(setUrl).then(function(data) {
-            var $ = cheerio.load(data.getBody());
-            var obj = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl01_cardSetCurrent img');
-            if (obj.length > 0) {
-            var setCode = obj.attr('src').replace(/.*set=([^&]*).*/, '$1');
-            var aux = { name: set, code: setCode };
+            downloader.get(setUrl).then(function(data) {
+                var $ = cheerio.load(data.getBody());
+                var obj = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl01_cardSetCurrent img');
+                if (obj.length > 0) {
+                    var setCode = obj.attr('src').replace(/.*set=([^&]*).*/, '$1');
+                    var aux = { name: set, code: setCode };
 
-            ret.push(aux);
-            }
-            else {
-            console.log("Cannot retrieve information for set %s", set);
-            }
+                    ret.push(aux);
+                }
+                else {
+                    console.log("Cannot retrieve information for set %s", set);
+                }
 
-            cb();
-        }).fail(function(data) {
-            throw(new Error("Error downloading " + setUrl));
-        });
+                cb();
+            }).fail(function(data) {
+                throw(new Error("Error downloading " + setUrl));
+            });
         },
         function() {
-        callback(null, ret);
+            callback(null, ret);
         }
     );
     }).fail(function(data) { callback(data); });
