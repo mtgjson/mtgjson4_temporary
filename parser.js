@@ -320,6 +320,11 @@ var parseOracle = function(multiverseid, data, callback) {
             });
         });
     }
+	
+	// Watermarks
+	var waterMarks = $('#' + idPrefix + '_markRow');
+	if (waterMarks.length > 0)
+		card.watermark = $('.value', waterMarks).text().trim();
 
     // Calculate colors
     if (card.manacost) {
