@@ -8,19 +8,18 @@ var async = require('async');
 
 var buildUrl = function(url, parameters) {
     var ret = module.exports.url_prefix + url;
+
     if (parameters) {
-    var keys = Object.keys(parameters).sort();
-    var aux = [];
-
-    keys.forEach(function(key) {
-        var value = parameters[key];
-        if (typeof(value) == 'string') {
-        value = value.replace(/ /g, '+');
-        }
-
-        aux.push(key + '=' + value);
-    });
-    ret += '?' + aux.join('&');
+        var keys = Object.keys(parameters).sort();
+        var aux = [];
+        keys.forEach(function(key) {
+            var value = parameters[key];
+            if (typeof(value) == 'string') {
+                value = value.replace(/ /g, '+');
+            }
+            aux.push(key + '=' + value);
+        });
+        ret += '?' + aux.join('&');
     }
 
     return(ret);
