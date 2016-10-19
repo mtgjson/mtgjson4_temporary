@@ -109,6 +109,9 @@ var set_add = function(set, card, callback) {
         throw new Error('Invalid card: ' + JSON.stringify(card));
     }
 
+    // TODO: We're currently assumming all cards have multiverse id.
+    var setCard = findCardInSet(card.multiverseid, card.name, set);
+
     if (card._id) {
         // Card already has an id. Let's do a sanity check.
         // TODO: Sanity check
@@ -116,12 +119,17 @@ var set_add = function(set, card, callback) {
 
     if (card._title) {
         // Check if we're consistent. Make actions if we're not.
+        if (card._title != card.name) {
+            card.layout = 'flip';
+            card.names = [ card._title, card.name ];
 
-        // delete card._title;
+            var otherCard = findCardInSetByName(card._title, set);
+
+            otherCard.layout = 'flip';
+            otherCard.names = card.names;
+        }
     }
 
-    // TODO: We're currently assumming all cards have multiverse id.
-    var setCard = findCardInSet(card.multiverseid, card.name, set);
     if (!setCard) {
         setCard = {};
         setCard._id = uuid();
@@ -129,10 +137,27 @@ var set_add = function(set, card, callback) {
     }
 
     // Merge
+
+    // The persistent keys are not replaced if they are already on the destination object.
+    var persistentKeys = [
+        'layout'
+    ];
     var keys = Object.keys(card);
     keys.forEach(function(key) {
-        setCard[key] = card[key];
+        if (setCard[key] && persistentKeys.indexOf(key) >= 0) {
+            // Intentionally left blank.
+        }
+        else
+            setCard[key] = card[key];
     });
+
+    // Delete unused/internal fields
+    [
+        '_title'
+    ]
+        .forEach(function(key) {
+            delete(setCard[key]);
+        });
 
     // TODO: Any set-specific corrections
 
@@ -145,6 +170,15 @@ var set_add = function(set, card, callback) {
 var findCardInSet = function(multiverseid, name, set) {
     var findCB = function(element, index, array) {
         return(element.multiverseid == multiverseid && element.name == name);
+    };
+
+    return(set.cards.find(findCB));
+};
+
+// Retriever the FIRST card with the given name in the set.
+var findCardInSetByName = function(name, set) {
+    var findCB = function(element, index, array) {
+        return(element.name == name);
     };
 
     return(set.cards.find(findCB));
