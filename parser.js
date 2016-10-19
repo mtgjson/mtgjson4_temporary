@@ -264,7 +264,7 @@ var parseOracle = function(multiverseid, data, callback) {
     if (cardPT.length > 0) {
         var pt = $('.value', cardPT).text().trim();
         if (pt.indexOf('/') < 0) // Loyalty
-            card.loyalty = pt;
+            card.loyalty = parseInt(pt);
         else
         {
             pt = pt.split('/');
