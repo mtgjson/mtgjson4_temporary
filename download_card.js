@@ -63,20 +63,20 @@ var downloadFiles = function(multiverseid, callback) {
         var maxPage = 1;
         if (grabPrintings.maxPage)
             maxPage = grabPrintings.maxPage;
-    var url = buildUrl('/Pages/Card/Printings.aspx', { 'page' : page, 'multiverseid': multiverseid });
+	var url = buildUrl('/Pages/Card/Printings.aspx', { 'page' : page, 'multiverseid': multiverseid });
 
-    downloader.get(url).then(function(data) {
+	downloader.get(url).then(function(data) {
             ret.printings.push(data.getBody());
 
-        var $ = cheerio.load(data.getBody());
-        var pages = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_PrintingsList_pagingControlsContainer');
-        if (pages.length > 0) {
-        $('a', pages).each(function(idx, obj) {
-            var n = parseInt($(obj).text().trim());
-            if (n > maxPage)
-            maxPage = n;
-        });
-        }
+            var $ = cheerio.load(data.getBody());
+            var pages = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_PrintingsList_pagingControlsContainer');
+            if (pages.length > 0) {
+		$('a', pages).each(function(idx, obj) {
+		    var n = parseInt($(obj).text().trim());
+		    if (n > maxPage)
+			maxPage = n;
+		});
+            }
 
             page++;
             grabPrintings.maxPage = maxPage;
@@ -84,7 +84,7 @@ var downloadFiles = function(multiverseid, callback) {
                 setImmediate(grabPrintings, page, callback);
             else
                 callback();
-    }).fail(function(data) { callback(data); });
+	}).fail(function(data) { callback(data); });
     };
 
     // Download all languages URLS
@@ -171,10 +171,10 @@ module.exports.downloadSetCardListCompact = function(setName, callback) {
         // Next page?
         pagenum++;
         if (pagenum < maxpages) {
-        setImmediate(downloadPage, pagenum);
+            setImmediate(downloadPage, pagenum);
         }
         else {
-        callback(null, ret);
+            callback(null, ret);
         }
     }).fail(function(data) { callback(data); });
     };

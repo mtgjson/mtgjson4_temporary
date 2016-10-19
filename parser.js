@@ -8,11 +8,10 @@ Array.prototype.unique = function() {
     return this.reduce(function(accum, current) {
     if (accum.indexOf(current) < 0)
         accum.push(current);
-    
+
     return(accum);
     }, []);
 };
-
 
 var SYMBOLS = {
     'White': 'W',
@@ -83,7 +82,7 @@ var fixText = function(blocks) {
         .replace(/&#x2014;/g, '-') // Fix long dashes
         .replace(/<[^>]*>/g, '');
     };
-    
+
     var aux = [];
     if (Array.isArray(blocks)) {
         var i;
@@ -119,7 +118,7 @@ var parsePrinted = function(multiverseid, data, callback) {
     card.originalType = $('#' + idPrefix + '_typeRow .value').text().trim().replace(/  /g, ' ');
 
     // TODO: Extract subtypes and supertypes
-    
+
     // Text
     var cardText = $('#' + idPrefix + '_textRow');
     if (cardText.length > 0) {
@@ -188,7 +187,7 @@ var parseOracle = function(multiverseid, data, callback) {
     card.type = $('#' + idPrefix + '_typeRow .value').text().trim().replace(/  /g, ' ');
 
     // TODO: Extract subtypes and supertypes
-    
+
     /*
     If the card has "Legendary Artifact Creature -- Human Wizard"
         super = Legendary
@@ -201,7 +200,7 @@ var parseOracle = function(multiverseid, data, callback) {
         subtypes = Goblin, Dwarf
 
     */
-  
+
     // These are the valid super types that a card can have
     var VALID_SUPERTYPES = ["Basic", "Legendary", "Snow", "World", "Ongoing"];
 
@@ -313,7 +312,7 @@ var parseOracle = function(multiverseid, data, callback) {
             var content = $(fields[1]).html().trim()
             .replace(/&#x2019;/g, "'")
             .replace(/(&#x201C;|&#x201D)/g, '"');
-            
+
             card.rulings.push({
             'date': momentdate.format('YYYY-MM-DD'),
             'text': fixText(content)
@@ -346,7 +345,26 @@ var parseOracle = function(multiverseid, data, callback) {
     callback(null, card);
 };
 
+var parseLegalities = function(data, callback) {
+    var legalities = [];
+
+    var $ = cheerio.load(data[0]);
+
+    var legalities_table = $('table')[1];
+    $('.cardItem', legalities_table).each(function(idx, item) {
+        var cells = $('td', item);
+
+        legalities.push({
+            'format': $(cells[0]).html().trim(),
+            'legality': $(cells[1]).html().trim()
+        });
+    });
+
+    callback(null, legalities);
+};
+
 module.exports = {
     oracle: parseOracle,
-    printed: parsePrinted
+    printed: parsePrinted,
+    legalities: parseLegalities
 };

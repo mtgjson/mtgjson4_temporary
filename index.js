@@ -51,34 +51,37 @@ var findTokenInSet = function(name, set) {
 };
 
 var downloadCard = function(card, callback) {
-    var downloaded = null;
-    tiptoe(
-        function() {
-            cardGrab.downloadFiles(card.multiverseid, this);
-        },
-        function(data) {
-            downloaded = data;
-            parser.oracle(card.multiverseid, data.oracle, this.parallel());
-            parser.printed(card.multiverseid, data.printed, this.parallel());
-        },
-        function(oracleData, printedData) {
-            Object.keys(oracleData).forEach(function(key) {
-            card[key] = oracleData[key];
-            });
-            Object.keys(printedData).forEach(function (key) {
-                card[key] = printedData[key];
-            });
-            this();
-        },
-        function(err) {
-            callback(err, card);
-        }
-    );
+var downloaded = null;
+tiptoe(
+    function() {
+        cardGrab.downloadFiles(card.multiverseid, this);
+    },
+    function(data) {
+        downloaded = data;
+        parser.oracle(card.multiverseid, data.oracle, this.parallel());
+        parser.printed(card.multiverseid, data.printed, this.parallel());
+        parser.legalities(data.printings, this.parallel());
+    },
+    function(oracleData, printedData, legalities) {
+	Object.keys(oracleData).forEach(function(key) {
+	    card[key] = oracleData[key];
+	});
+	Object.keys(printedData).forEach(function (key) {
+            card[key] = printedData[key];
+        });
+
+        card.legalities = legalities;
+        this();
+    },
+    function(err) {
+        callback(err, card);
+    }
+);
 };
 
 var parseTokenForSet = function(setCode, callback) {
     var SET, _tokens;
-    
+
     tiptoe(
     function() {
         tokens.forSet(setCode, this);
@@ -119,7 +122,7 @@ var parseTokenForSet = function(setCode, callback) {
     function(err) {
         if (err) throw(err);
         callback();
-        
+
     }
     );
 };
@@ -204,6 +207,6 @@ if (Object.keys(cli).indexOf(command) < 0)
 
 init(function(err) {
     if (err) throw(err);
-    
+
     cli[command].apply(cleanup, args);
 });
