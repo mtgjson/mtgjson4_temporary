@@ -1,0 +1,20 @@
+{
+	"name" : "Kaladesh",
+	"code" : "KLD",
+	"releaseDate" : "2016-09-30",
+	"border" : "black",
+	"type" : "expansion",
+	"block" : "Kaladesh",
+	"booster" : [["rare", "mythic rare"], "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "land", "marketing"],
+	"translations": {
+		"de": "Kaladesh",
+		"fr": "Kaladesh",
+		"it": "Kaladesh",
+		"es": "Kaladesh",
+		"pt": "Kaladesh",
+		"jp": "カラデシュ",
+		"cn": "卡拉德许",
+		"ru": "Каладеш",
+		"ko": "칼라데시"
+	}
+}
