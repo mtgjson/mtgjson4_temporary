@@ -149,6 +149,8 @@ var parseOracle = function(multiverseid, data, callback) {
 
 
     card._title = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_subtitleDisplay').text().trim();
+    card.multiverseid = multiverseid;
+    card.layout = 'normal';
 
     if (rightCol.length == 2) {
         // Double-sided and Meld cards
@@ -180,9 +182,6 @@ var parseOracle = function(multiverseid, data, callback) {
         if (name2 == card._title)
             colIdx = 1;
     }
-
-    card.multiverseid = multiverseid;
-    card.layout = 'normal';
 
     // In case of double-sided cards, this should always holds the front card id.
     var frontCardIdx = $(rightCol[0]).attr('id').replace('_rightCol', '');
