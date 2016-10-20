@@ -119,7 +119,7 @@ var set_add = function(set, card, callback) {
 
     if (card._title) {
         // Check if we're consistent. Make actions if we're not.
-        if (card._title != card.name) {
+        if (card._title != card.name && card.layout != 'double-sided') {
             card.layout = 'flip';
             card.names = [ card._title, card.name ];
 

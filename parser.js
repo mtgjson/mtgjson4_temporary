@@ -147,7 +147,40 @@ var parseOracle = function(multiverseid, data, callback) {
         return;
     }
 
+
     card._title = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_subtitleDisplay').text().trim();
+
+    if (rightCol.length == 2) {
+        // Double-sided and Meld cards
+        card.layout = 'double-sided'; // Meld are handled later
+
+        // Find the correct column to work with
+	var leftPrefix = $(rightCol[0]).attr('id').replace('_rightCol', '');
+	var rightPrefix = $(rightCol[1]).attr('id').replace('_rightCol', '');
+
+        var leftMultiverse = $('#' + leftPrefix + '_currentSetSymbol a').first().attr('href').match(/multiverseid=([^&]*)/)[1];
+	var rightMultiverse = $('#' + rightPrefix + '_currentSetSymbol a').first().attr('href').match(/multiverseid=([^&]*)/)[1];
+
+
+        // Card names
+        card.names = [];
+        var name1 = $('#' + leftPrefix + '_nameRow .value').text().trim();
+        var number1 = $('#' + leftPrefix + '_numberRow .value').text().trim();
+        var name2 = $('#' + rightPrefix + '_nameRow .value').text().trim();
+
+        if (number1.substr(-1) == 'a') {
+            card.names.push(name1);
+            card.names.push(name2);
+        }
+        else {
+            card.names.push(name2);
+            card.names.push(name1);
+        }
+
+        if (name2 == card._title)
+            colIdx = 1;
+    }
+
     card.multiverseid = multiverseid;
     card.layout = 'normal';
 
@@ -320,7 +353,7 @@ var parseOracle = function(multiverseid, data, callback) {
             });
         });
     }
-	
+
 	// Watermarks
 	var waterMarks = $('#' + idPrefix + '_markRow');
 	if (waterMarks.length > 0)
