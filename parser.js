@@ -25,6 +25,7 @@ var SYMBOLS = {
     'Black or Red': 'B/R',
     'Green or White': 'G/W',
     'White or Blue': 'W/B',
+    'Green or Blue': 'G/U',
     'Two or White': '2/W',
     'Two or Blue': '2/U',
     'Two or Black': '2/B',
@@ -346,8 +347,6 @@ var parseOracle = function(multiverseid, data, callback) {
             card.number += 'a';
         else
             card.number += 'b';
-
-        delete card._title;
     }
 
     // Card Artist
