@@ -163,7 +163,6 @@ var parseOracle = function(multiverseid, data, callback) {
         var leftMultiverse = $('#' + leftPrefix + '_currentSetSymbol a').first().attr('href').match(/multiverseid=([^&]*)/)[1];
 	var rightMultiverse = $('#' + rightPrefix + '_currentSetSymbol a').first().attr('href').match(/multiverseid=([^&]*)/)[1];
 
-
         // Card names
         card.names = [];
         var name1 = $('#' + leftPrefix + '_nameRow .value').text().trim().replace(/Æ/g, 'Ae');;
@@ -332,6 +331,24 @@ var parseOracle = function(multiverseid, data, callback) {
     var cardNumber = $('#' + idPrefix + '_numberRow');
     if (cardNumber.length > 0)
         card.number = $('.value', cardNumber).text().trim();
+
+    // Process split cards
+    if (card._title.indexOf('//') >= 0) {
+        card.layout = 'split';
+
+        var names = card._title.split('//');
+        names[0] = names[0].trim();
+        names[1] = names[1].trim();
+
+        card.names = names;
+
+        if (names[0] == card.name)
+            card.number += 'a';
+        else
+            card.number += 'b';
+
+        delete card._title;
+    }
 
     // Card Artist
     var cardArtist = $('#' + idPrefix + '_artistRow');
