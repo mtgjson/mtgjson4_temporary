@@ -48,54 +48,98 @@ var set_load = function(set_code, callback) {
 };
 
 // From: http://www.davekoelle.com/alphanum.html
+/*
 var sortAlphaNum = function(a, b) {
     var reA = /[^a-zA-Z]/g;
     var reN = /[^0-9]/g;
     var AInt = parseInt(a, 10);
     var BInt = parseInt(b, 10);
 
-    if(isNaN(AInt) && isNaN(BInt)){
+    if (isNaN(AInt) && isNaN(BInt)) {
         var aA = a.replace(reA, "");
         var bA = b.replace(reA, "");
-        if(aA === bA) {
-            var aN = parseInt(a.replace(reN, ""), 10);
-            var bN = parseInt(b.replace(reN, ""), 10);
-            return aN === bN ? 0 : aN > bN ? 1 : -1;
-        } else {
+        if (aA === bA) {
+            var aN = a.replace(reN, "");
+            var bN = b.replace(reN, "");
+            return(aN.localeCompare(bN));
+        }
+        else {
             return aA > bA ? 1 : -1;
         }
     }
-    else if(isNaN(AInt)) {//A is not an Int
+    else if (isNaN(AInt)) {//A is not an Int
         return 1; //to make alphanumeric sort first return -1 here
     }
-    else if(isNaN(BInt)) {//B is not an Int
+    else if (isNaN(BInt)) {//B is not an Int
         return -1; //to make alphanumeric sort first return 1 here
     }
-    else{
+    else {
         return AInt > BInt ? 1 : -1;
     }
 };
+*/
+
+/* ********************************************************************
+ * Alphanum sort() function version - case sensitive
+ *  - Slower, but easier to modify for arrays of objects which contain
+ *    string properties
+ *
+ */
+var sortAlphaNum = function(a, b) {
+    var chunkify = function(t) {
+        var tz = new Array();
+        var x = 0, y = -1, n = 0, i, j;
+
+        while (i = (j = t.charAt(x++)).charCodeAt(0)) {
+            var m = (i == 46 || (i >=48 && i <= 57));
+            if (m !== n) {
+                tz[++y] = "";
+                n = m;
+            }
+            tz[y] += j;
+        }
+        return tz;
+    };
+
+    var aa = chunkify(a);
+    var bb = chunkify(b);
+    var x;
+
+    for (x = 0; aa[x] && bb[x]; x++) {
+        if (aa[x] !== bb[x]) {
+            var c = Number(aa[x]), d = Number(bb[x]);
+            if (c == aa[x] && d == bb[x])
+                return c - d;
+            else
+                return (aa[x] > bb[x]) ? 1 : -1;
+        }
+    }
+    return aa.length - bb.length;
+}
+
 
 var set_save = function(set, callback) {
     var setPath = path.join(__dirname, 'db', set.code + '.json');
 
     // Sort cards
-
     if (set.cards) {
         set.cards = set.cards.sort(function(a, b) {
-            return(sortAlphaNum(a.number, b.number));
-    });
 
-    set.cards.forEach(function(card) {
-        var aux;
-        var keys = Object.keys(card).sort();
-        keys.forEach(function(key) {
-            aux = card[key];
-            delete card[key];
-            card[key] = aux;
+            return(sortAlphaNum(a.number, b.number));
         });
-    });
+
+        set.cards.forEach(function(card) {
+            var aux;
+            var keys = Object.keys(card).sort();
+            keys.forEach(function(key) {
+                aux = card[key];
+                delete card[key];
+                card[key] = aux;
+            });
+        });
     }
+
+    delete set.meldcards;
 
     fs.writeFile(setPath, JSON.stringify(set, null, 2), 'utf-8', callback);
 };
@@ -119,7 +163,7 @@ var set_add = function(set, card, callback) {
 
     if (card._title) {
         // Check if we're consistent. Make actions if we're not.
-        if (card._title != card.name) {
+        if (card._title != card.name && card.layout != 'double-sided') {
             card.layout = 'flip';
             card.names = [ card._title, card.name ];
 
@@ -137,6 +181,54 @@ var set_add = function(set, card, callback) {
                     otherCard.number = otherCard.number + 'a';
             }
         }
+        if (card.names && card.layout != 'flip') {
+            var matches = card.text.match(/\(Melds with ([^\.\)]*)\.?\)/);
+            if (matches != null) {
+                if (!set.meldcards)
+                    set.meldcards = {};
+
+                // Meld card.
+                var mainCard = card.name;
+                var secondCard = matches[1];
+                var meldCard = card.names[1];
+
+                card.names = [
+                    mainCard,
+                    secondCard,
+                    meldCard
+                ];
+                card.layout = 'meld';
+
+                set.meldcards[mainCard] = card.names;
+                set.meldcards[secondCard] = card.names;
+                set.meldcards[meldCard] = card.names;
+
+                // Find second card
+                var card2 = findCardInSetByName(secondCard, set);
+                if (card2 == null) {
+                    console.log("Cannot find second card for melding: %s", secondCard);
+                }
+                else {
+                    card2.names = card.names;
+                    card2.layout = 'meld';
+                }
+
+                // Find the melded card
+                var card3 = findCardInSetByName(meldCard, set);
+                if (card3 == null) {
+                    console.log("Cannot find melded card for melding: %s", meldCard);
+                }
+                else {
+                    card3.names = card.names;
+                    card3.layout = 'meld';
+                }
+            }
+        }
+
+        if (set.meldcards && Object.keys(set.meldcards).indexOf(card.name) >= 0) {
+            card.layout = 'meld';
+            card.names = set.meldcards[card.name];
+        }
     }
 
     if (!setCard) {
@@ -146,7 +238,6 @@ var set_add = function(set, card, callback) {
     }
 
     // Merge
-
     // The persistent keys are not replaced if they are already on the destination object.
     var persistentKeys = [
         'layout',
@@ -155,7 +246,13 @@ var set_add = function(set, card, callback) {
     var keys = Object.keys(card);
     keys.forEach(function(key) {
         if (setCard[key] && persistentKeys.indexOf(key) >= 0) {
-            // Intentionally left blank.
+            if (key == 'layout')
+                if (setCard.layout != card.layout) {
+                    if (setCard.layout == 'normal') {
+                        console.log("WARNING: Changed layout of card %s. %s => %s", card.name, setCard.layout, card.layout);
+                        setCard.layout = card.layout
+                    }
+                }
         }
         else
             setCard[key] = card[key];
@@ -165,7 +262,8 @@ var set_add = function(set, card, callback) {
     [
         '_title',
         'special',
-        'set'
+        'set',
+        'linkedCard'
     ]
         .forEach(function(key) {
             delete(setCard[key]);
