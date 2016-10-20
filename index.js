@@ -34,9 +34,10 @@ function cleanup() {
     downloader.cleanup();
 }
 
-var findCardInSet = function(multiverseid, set) {
+/*
+var findCardInSet = function(multiverseid, name, set) {
     var findCB = function(element, index, array) {
-        return(element.multiverseid == multiverseid);
+        return(element.multiverseid == multiverseid && element.name == name);
     };
 
     return(set.cards.find(findCB));
@@ -49,13 +50,14 @@ var findTokenInSet = function(name, set) {
 
     return(set.tokens.find(findCB));
 };
+*/
 
 var downloadCard = function(card, callback) {
     var downloaded = null;
     tiptoe(
         // Download all the card information
         function() {
-            cardGrab.downloadFiles(card.multiverseid, this);
+            cardGrab.downloadFiles(card.multiverseid, (card.special)?card.name:null, this);
         },
         // Parse each section of the downloaded data
         function(data) {
@@ -151,52 +153,38 @@ var cli = {
     async.eachSeries(args, function(setCode, cb) {
         var SET = null;
         tiptoe(
-        function() {
-            sets.load(setCode, this);
-        },
-        function(_SET) {
-            SET = _SET;
-            console.log('Downloading list of cards for %s...', SET.name);
-            //cardGrab.downloadSetCardList(SET.name, this);
-            cardGrab.downloadSetCardListCompact(SET.name, this);
-        },
-        function(cards) {
-            if (!SET.cards) {
-                SET.cards = [];
-            }
+            function() {
+                sets.load(setCode, this);
+            },
+            function(_SET) {
+                SET = _SET;
+                console.log('Downloading list of cards for %s...', SET.name);
+                //cardGrab.downloadSetCardList(SET.name, this);
+                cardGrab.downloadSetCardListCompact(SET.name, this);
+            },
+            function(cards) {
+                var i = 0;
+                if (!SET.cards) {
+                    SET.cards = [];
+                }
 
-            async.eachSeries(cards, function(card, cb) {
-            var setCard = null;
-            if (card.multiverseid) {
-                setCard = findCardInSet(card.multiverseid, SET);
-            }
-
-            if (!setCard) {
-                console.log('New card: %s', card.name);
-                setCard = card;
-                card['_id'] = uuid();
-                SET.cards.push(card);
-            }
-            else {
-                // Merge data
-                Object.keys(card).forEach(function(key) {
-                    setCard[key] = card[key];
-                });
-            }
-
-            // Download and parse rest of data.
-            console.log('Downloading files for card %s...', card.name);
-            downloadCard(setCard, cb);
-            }, this);
-        },
-        function() {
-            // Save set.
-            sets.save(SET, this);
-        },
-        function(err) {
-            if (err) throw(err);
-            cb();
-        }
+                async.eachSeries(cards, function(card, cb) {
+                    i++;
+                    console.log('Retrieving data for card "%s" %d/%d', card.name, i, cards.length);
+                    downloadCard(card, function(err, c) {
+                        if (err) throw(err);
+                        sets.add(SET, c, cb);
+                    });
+                }, this);
+            },
+            function() {
+                // Save set.
+                    sets.save(SET, this);
+                },
+                function(err) {
+                    if (err) throw(err);
+                    cb();
+                }
         );
     }, this);
     },

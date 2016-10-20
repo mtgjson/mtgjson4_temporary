@@ -8,32 +8,45 @@ var async = require('async');
 
 var buildUrl = function(url, parameters) {
     var ret = module.exports.url_prefix + url;
+
     if (parameters) {
-    var keys = Object.keys(parameters).sort();
-    var aux = [];
-
-    keys.forEach(function(key) {
-        var value = parameters[key];
-        if (typeof(value) == 'string') {
-        value = value.replace(/ /g, '+');
-        }
-
-        aux.push(key + '=' + value);
-    });
-    ret += '?' + aux.join('&');
+        var keys = Object.keys(parameters).sort();
+        var aux = [];
+        keys.forEach(function(key) {
+            var value = parameters[key];
+            if (typeof(value) == 'string') {
+                value = value.replace(/ /g, '+');
+            }
+            if (value != null)
+                aux.push(key + '=' + value);
+        });
+        ret += '?' + aux.join('&');
     }
 
     return(ret);
 };
 
-var downloadFiles = function(multiverseid, callback) {
+var downloadFiles = function(multiverseid, partName, callback) {
+    if (!callback && typeof(partName) == 'function') {
+        callback = partName;
+        partName = null;
+    }
+
     var oracleUrl = buildUrl(
         '/Pages/Card/Details.aspx',
-        { 'printed': 'false', 'multiverseid': multiverseid }
+        {
+            'printed': 'false',
+            'multiverseid': multiverseid,
+            'part': partName
+        }
     );
     var printedUrl = buildUrl(
         '/Pages/Card/Details.aspx',
-        { 'printed': 'true', 'multiverseid': multiverseid }
+        {
+            'printed': 'true',
+            'multiverseid': multiverseid,
+            'part': partName
+        }
     );
 
     var ret = {
@@ -156,22 +169,22 @@ module.exports.downloadSetCardListCompact = function(setName, callback) {
 
         var pageList = $('#ctl00_ctl00_ctl00_MainContent_SubContent_topPagingControlsContainer');
         $('a', pageList).each(function(idx, obj) {
-        var num = parseInt($(obj).text());
-        if (num > maxpages)
-            maxpages = num;
+            var num = parseInt($(obj).text());
+            if (num > maxpages)
+                maxpages = num;
         });
 
         // Read the cards
         var checklist = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_searchResultsContainer tr.cardItem');
         checklist.each(function(idx, cardItem) {
-        var obj = $('.name a', cardItem);
-        var name = $(obj).html().replace(/&apos;/g, "'");
-        var printings = $('.printings a', cardItem);
-        var i;
-        for (i = 0; i < printings.length; i++) {
-            var multiverseid = parseInt($(printings[i]).attr('href').match(/multiverseid=([^&]*)/)[1]);
-            ret.push({ 'name': name, 'multiverseid': multiverseid });
-        }
+            var obj = $('.name a', cardItem);
+            var name = $(obj).html().replace(/&apos;/g, "'");
+            var printings = $('.printings a', cardItem);
+            var i;
+            for (i = 0; i < printings.length; i++) {
+                var multiverseid = parseInt($(printings[i]).attr('href').match(/multiverseid=([^&]*)/)[1]);
+                ret.push({ 'name': name, 'multiverseid': multiverseid });
+            }
         });
 
         // Next page?
@@ -180,6 +193,26 @@ module.exports.downloadSetCardListCompact = function(setName, callback) {
             setImmediate(downloadPage, pagenum);
         }
         else {
+            // Parse the files for two cards with the same multiverseid
+            var i, j;
+            for (i = 0; i < ret.length - 1; i++) {
+                for (j = i + 1; j < ret.length; j++) {
+                    var c1 = ret[i];
+                    var c2 = ret[j];
+
+                    if (c1.multiverseid == c2.multiverseid) {
+                        if (c1.name == c2.name) {
+                            console.log("We have a duplicate %s.", c1.name);
+                        }
+                        else {
+                            console.log("-REMOVE ME- Special card: '%s' and '%s'.", c1.name, c2.name);
+                            c1.special = true;
+                            c2.special = true;
+                        }
+                    }
+                }
+            }
+
             callback(null, ret);
         }
     }).fail(function(data) { callback(data); });

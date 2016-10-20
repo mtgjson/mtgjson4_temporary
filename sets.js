@@ -3,6 +3,8 @@
 var fs = require('fs');
 var path = require('path');
 
+var uuid = require('./uuid');
+
 var set_cache = {};
 
 var set_load = function(set_code, callback) {
@@ -40,13 +42,13 @@ var set_load = function(set_code, callback) {
         });
         return;
     }
-    
+
     getData(setPath);
     });
 };
 
 // From: http://www.davekoelle.com/alphanum.html
-var sortAlphaNum = function(a,b) {
+var sortAlphaNum = function(a, b) {
     var reA = /[^a-zA-Z]/g;
     var reN = /[^0-9]/g;
     var AInt = parseInt(a, 10);
@@ -62,11 +64,14 @@ var sortAlphaNum = function(a,b) {
         } else {
             return aA > bA ? 1 : -1;
         }
-    }else if(isNaN(AInt)){//A is not an Int
+    }
+    else if(isNaN(AInt)) {//A is not an Int
         return 1; //to make alphanumeric sort first return -1 here
-    }else if(isNaN(BInt)){//B is not an Int
+    }
+    else if(isNaN(BInt)) {//B is not an Int
         return -1; //to make alphanumeric sort first return 1 here
-    }else{
+    }
+    else{
         return AInt > BInt ? 1 : -1;
     }
 };
@@ -95,7 +100,114 @@ var set_save = function(set, callback) {
     fs.writeFile(setPath, JSON.stringify(set, null, 2), 'utf-8', callback);
 };
 
+/**
+ * Adds a given card to the set, checking if the card is new and adding any needed information
+ */
+var set_add = function(set, card, callback) {
+    if (!card.name) {
+        console.error("The card has no name.");
+        throw new Error('Invalid card: ' + JSON.stringify(card));
+    }
+
+    // TODO: We're currently assumming all cards have multiverse id.
+    var setCard = findCardInSet(card.multiverseid, card.name, set);
+
+    if (card._id) {
+        // Card already has an id. Let's do a sanity check.
+        // TODO: Sanity check
+    }
+
+    if (card._title) {
+        // Check if we're consistent. Make actions if we're not.
+        if (card._title != card.name) {
+            card.layout = 'flip';
+            card.names = [ card._title, card.name ];
+
+            if ('ab'.indexOf(card.number.substr(-1)) == -1)
+                card.number = card.number + 'b';
+
+            var otherCard = findCardInSetByName(card._title, set);
+            if (otherCard == null) {
+                console.log("Card %s is not yet on the database. Re-run the fetch.", card._title);
+            }
+            else {
+                otherCard.layout = 'flip';
+                otherCard.names = card.names;
+                if ('ab'.indexOf(otherCard.number.substr(-1)) == -1)
+                    otherCard.number = otherCard.number + 'a';
+            }
+        }
+    }
+
+    if (!setCard) {
+        setCard = {};
+        setCard._id = uuid();
+        set.cards.push(setCard);
+    }
+
+    // Merge
+
+    // The persistent keys are not replaced if they are already on the destination object.
+    var persistentKeys = [
+        'layout',
+        'number'
+    ];
+    var keys = Object.keys(card);
+    keys.forEach(function(key) {
+        if (setCard[key] && persistentKeys.indexOf(key) >= 0) {
+            // Intentionally left blank.
+        }
+        else
+            setCard[key] = card[key];
+    });
+
+    // Delete unused/internal fields
+    [
+        '_title',
+        'special',
+        'set'
+    ]
+        .forEach(function(key) {
+            delete(setCard[key]);
+        });
+
+    // TODO: Any set-specific corrections
+
+    if (callback && typeof(callback) === 'function')
+        setImmediate(callback, null, setCard);
+
+    return(setCard);
+};
+
+var findCardInSet = function(multiverseid, name, set) {
+    var findCB = function(element, index, array) {
+        return(element.multiverseid == multiverseid && element.name == name);
+    };
+
+    return(set.cards.find(findCB));
+};
+
+// Retriever the FIRST card with the given name in the set.
+var findCardInSetByName = function(name, set) {
+    var findCB = function(element, index, array) {
+        return(element.name == name);
+    };
+
+    return(set.cards.find(findCB));
+};
+
+var findTokenInSet = function(name, set) {
+    var findCB = function(element, index, array) {
+        return(element.name.localeCompare(name) == 0);
+    };
+
+    return(set.tokens.find(findCB));
+};
+
 module.exports = {
     load: set_load,
-    save: set_save
+    save: set_save,
+    add: set_add,
+    findCard: findCardInSet,
+    findToken: findTokenInSet
 };
