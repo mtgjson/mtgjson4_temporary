@@ -178,7 +178,7 @@ module.exports.downloadSetCardListCompact = function(setName, callback) {
         var checklist = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_searchResultsContainer tr.cardItem');
         checklist.each(function(idx, cardItem) {
             var obj = $('.name a', cardItem);
-            var name = $(obj).html().replace(/&apos;/g, "'");
+            var name = $(obj).text().replace(/Æ/g, 'Ae');;
             var printings = $('.printings a', cardItem);
             var i;
             for (i = 0; i < printings.length; i++) {
