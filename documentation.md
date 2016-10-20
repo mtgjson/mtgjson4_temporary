@@ -4,9 +4,9 @@ Key | Example | Description
 --- | --- | ---
 _id | | This is an unmutable, unique, key that every card will have.
 artist | "John Avon" | This is the name of the artist for the specific print of a card. Some artist names may not match due to misprints being corrected.
-cmc | 8 | This is normally an integer of the converted mana cost of the card. In some situations, this might be a float because some cards have halfs (i.e. "Litt'e Girl") in their costs. Cards that do not have this field have an implied cmc of 0.
+cmc | 8 | This is normally an integer of the converted mana cost of the card. In some situations, this might be a float because some cards have halfs (i.e. "Litte Girl") in their costs. Cards that do not have this field have an implied cmc of 0.
 colorIdentity | ["U","G","B"] | This field tells you all the colors this card interacts with. For example, [General Tazri](http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=407529) has an ability that costs all 5 colors, so his color identity is all colors.
-colors | ["Blue", "Green", "Black"] | The colors the card is. For example,  General Tazri](http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=407529) is White only.
+colors | ["Blue", "Green", "Black"] | The colors the card is. For example, [General Tazri](http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=407529) is White only.
 flavor | "The Izzet quickly suspended their policy of lifetime guarantees." | The flavor text of the card. Will not be set if a card does not have flavor text.
 layout | "normal" | The possible layouts a card can have. ENUM values: normal, split, flip, double-faced, token, plane, scheme, phenomenon, leveler, vanguard, meld
 legalities | | An array of what formats this card is legal, restricted, or banned in.
