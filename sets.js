@@ -54,24 +54,25 @@ var sortAlphaNum = function(a, b) {
     var AInt = parseInt(a, 10);
     var BInt = parseInt(b, 10);
 
-    if(isNaN(AInt) && isNaN(BInt)){
+    if (isNaN(AInt) && isNaN(BInt)) {
         var aA = a.replace(reA, "");
         var bA = b.replace(reA, "");
-        if(aA === bA) {
-            var aN = parseInt(a.replace(reN, ""), 10);
-            var bN = parseInt(b.replace(reN, ""), 10);
-            return aN === bN ? 0 : aN > bN ? 1 : -1;
-        } else {
+        if (aA === bA) {
+            var aN = a.replace(reN, "");
+            var bN = b.replace(reN, "");
+            return(aN.localeCompare(bN));
+        }
+        else {
             return aA > bA ? 1 : -1;
         }
     }
-    else if(isNaN(AInt)) {//A is not an Int
+    else if (isNaN(AInt)) {//A is not an Int
         return 1; //to make alphanumeric sort first return -1 here
     }
-    else if(isNaN(BInt)) {//B is not an Int
+    else if (isNaN(BInt)) {//B is not an Int
         return -1; //to make alphanumeric sort first return 1 here
     }
-    else{
+    else {
         return AInt > BInt ? 1 : -1;
     }
 };
@@ -83,6 +84,7 @@ var set_save = function(set, callback) {
 
     if (set.cards) {
         set.cards = set.cards.sort(function(a, b) {
+
             return(sortAlphaNum(a.number, b.number));
         });
 
