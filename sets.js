@@ -48,6 +48,7 @@ var set_load = function(set_code, callback) {
 };
 
 // From: http://www.davekoelle.com/alphanum.html
+/*
 var sortAlphaNum = function(a, b) {
     var reA = /[^a-zA-Z]/g;
     var reN = /[^0-9]/g;
@@ -76,6 +77,46 @@ var sortAlphaNum = function(a, b) {
         return AInt > BInt ? 1 : -1;
     }
 };
+*/
+
+/* ********************************************************************
+ * Alphanum sort() function version - case sensitive
+ *  - Slower, but easier to modify for arrays of objects which contain
+ *    string properties
+ *
+ */
+var sortAlphaNum = function(a, b) {
+    var chunkify = function(t) {
+        var tz = new Array();
+        var x = 0, y = -1, n = 0, i, j;
+
+        while (i = (j = t.charAt(x++)).charCodeAt(0)) {
+            var m = (i == 46 || (i >=48 && i <= 57));
+            if (m !== n) {
+                tz[++y] = "";
+                n = m;
+            }
+            tz[y] += j;
+        }
+        return tz;
+    }
+
+    var aa = chunkify(a);
+    var bb = chunkify(b);
+    var x;
+
+    for (x = 0; aa[x] && bb[x]; x++) {
+        if (aa[x] !== bb[x]) {
+            var c = Number(aa[x]), d = Number(bb[x]);
+            if (c == aa[x] && d == bb[x])
+                return c - d;
+            else
+                return (aa[x] > bb[x]) ? 1 : -1;
+        }
+    }
+    return aa.length - bb.length;
+}
+
 
 var set_save = function(set, callback) {
     var setPath = path.join(__dirname, 'db', set.code + '.json');
@@ -157,7 +198,13 @@ var set_add = function(set, card, callback) {
     var keys = Object.keys(card);
     keys.forEach(function(key) {
         if (setCard[key] && persistentKeys.indexOf(key) >= 0) {
-            // Intentionally left blank.
+            if (key == 'layout')
+                if (setCard.layout != card.layout) {
+                    if (setCard.layout == 'normal') {
+                        console.log("WARNING: Changed layout of card %s. %s => %s", card.name, setCard.layout, card.layout);
+                        setCard.layout = card.layout
+                    }
+                }
         }
         else
             setCard[key] = card[key];
