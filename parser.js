@@ -148,7 +148,7 @@ var parseOracle = function(multiverseid, data, callback) {
     }
 
 
-    card._title = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_subtitleDisplay').text().trim();
+    card._title = $('#ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_subtitleDisplay').text().trim().replace(/Æ/g, 'Ae');;
     card.multiverseid = multiverseid;
     card.layout = 'normal';
 
@@ -166,9 +166,9 @@ var parseOracle = function(multiverseid, data, callback) {
 
         // Card names
         card.names = [];
-        var name1 = $('#' + leftPrefix + '_nameRow .value').text().trim();
+        var name1 = $('#' + leftPrefix + '_nameRow .value').text().trim().replace(/Æ/g, 'Ae');;
         var number1 = $('#' + leftPrefix + '_numberRow .value').text().trim();
-        var name2 = $('#' + rightPrefix + '_nameRow .value').text().trim();
+        var name2 = $('#' + rightPrefix + '_nameRow .value').text().trim().replace(/Æ/g, 'Ae');;
 
         if (number1.substr(-1) == 'a') {
             card.names.push(name1);
@@ -236,7 +236,13 @@ var parseOracle = function(multiverseid, data, callback) {
     */
 
     // These are the valid super types that a card can have
-    var VALID_SUPERTYPES = ["Basic", "Legendary", "Snow", "World", "Ongoing"];
+    var VALID_SUPERTYPES = [
+        'Basic',
+        'Legendary',
+        'Snow',
+        'World',
+        'Ongoing'
+    ];
 
     // Split the card into the super/sub type sets
     var cardTypes = card.type.split("—");
@@ -353,10 +359,10 @@ var parseOracle = function(multiverseid, data, callback) {
         });
     }
 
-	// Watermarks
-	var waterMarks = $('#' + idPrefix + '_markRow');
-	if (waterMarks.length > 0)
-		card.watermark = $('.value', waterMarks).text().trim();
+    // Watermarks
+    var waterMarks = $('#' + idPrefix + '_markRow');
+    if (waterMarks.length > 0)
+        card.watermark = $('.value', waterMarks).text().trim();
 
     // Calculate colors
     if (card.manacost) {
@@ -373,11 +379,17 @@ var parseOracle = function(multiverseid, data, callback) {
                     if ('WUBRG'.indexOf(symbol[i]) >= 0)
                         colors.push(symbol[i]);
                 }
-                });
+            });
             colors.unique().forEach(function(x) {
                 card.colors.push(COLORS[x]);
             });
         }
+    }
+
+    // Linked cards (for Meld)
+    var linkedCard = $('#' + idPrefix + '_linkedRow');
+    if (linkedCard.length > 0) {
+        card.linkedCard = $('a', linkedCard).first().attr('href').match(/name=\+?\[([^\]]*)\]/)[1];
     }
 
     callback(null, card);
