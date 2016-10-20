@@ -99,7 +99,7 @@ var sortAlphaNum = function(a, b) {
             tz[y] += j;
         }
         return tz;
-    }
+    };
 
     var aa = chunkify(a);
     var bb = chunkify(b);
@@ -122,7 +122,6 @@ var set_save = function(set, callback) {
     var setPath = path.join(__dirname, 'db', set.code + '.json');
 
     // Sort cards
-
     if (set.cards) {
         set.cards = set.cards.sort(function(a, b) {
 
@@ -139,6 +138,8 @@ var set_save = function(set, callback) {
             });
         });
     }
+
+    delete set.meldcards;
 
     fs.writeFile(setPath, JSON.stringify(set, null, 2), 'utf-8', callback);
 };
@@ -180,6 +181,54 @@ var set_add = function(set, card, callback) {
                     otherCard.number = otherCard.number + 'a';
             }
         }
+        if (card.names && card.layout != 'flip') {
+            var matches = card.text.match(/\(Melds with ([^\.\)]*)\.?\)/);
+            if (matches != null) {
+                if (!set.meldcards)
+                    set.meldcards = {};
+
+                // Meld card.
+                var mainCard = card.name;
+                var secondCard = matches[1];
+                var meldCard = card.names[1];
+
+                card.names = [
+                    mainCard,
+                    secondCard,
+                    meldCard
+                ];
+                card.layout = 'meld';
+
+                set.meldcards[mainCard] = card.names;
+                set.meldcards[secondCard] = card.names;
+                set.meldcards[meldCard] = card.names;
+
+                // Find second card
+                var card2 = findCardInSetByName(secondCard, set);
+                if (card2 == null) {
+                    console.log("Cannot find second card for melding: %s", secondCard);
+                }
+                else {
+                    card2.names = card.names;
+                    card2.layout = 'meld';
+                }
+
+                // Find the melded card
+                var card3 = findCardInSetByName(meldCard, set);
+                if (card3 == null) {
+                    console.log("Cannot find melded card for melding: %s", meldCard);
+                }
+                else {
+                    card3.names = card.names;
+                    card3.layout = 'meld';
+                }
+            }
+        }
+
+        if (set.meldcards && Object.keys(set.meldcards).indexOf(card.name) >= 0) {
+            card.layout = 'meld';
+            card.names = set.meldcards[card.name];
+        }
     }
 
     if (!setCard) {
@@ -189,7 +238,6 @@ var set_add = function(set, card, callback) {
     }
 
     // Merge
-
     // The persistent keys are not replaced if they are already on the destination object.
     var persistentKeys = [
         'layout',
@@ -214,7 +262,8 @@ var set_add = function(set, card, callback) {
     [
         '_title',
         'special',
-        'set'
+        'set',
+        'linkedCard'
     ]
         .forEach(function(key) {
             delete(setCard[key]);
