@@ -157,12 +157,11 @@ var parseOracle = function(multiverseid, data, callback) {
         card.layout = 'double-sided'; // Meld are handled later
 
         // Find the correct column to work with
-	var leftPrefix = $(rightCol[0]).attr('id').replace('_rightCol', '');
-	var rightPrefix = $(rightCol[1]).attr('id').replace('_rightCol', '');
+        var leftPrefix = $(rightCol[0]).attr('id').replace('_rightCol', '');
+        var rightPrefix = $(rightCol[1]).attr('id').replace('_rightCol', '');
 
         var leftMultiverse = $('#' + leftPrefix + '_currentSetSymbol a').first().attr('href').match(/multiverseid=([^&]*)/)[1];
-	var rightMultiverse = $('#' + rightPrefix + '_currentSetSymbol a').first().attr('href').match(/multiverseid=([^&]*)/)[1];
-
+        var rightMultiverse = $('#' + rightPrefix + '_currentSetSymbol a').first().attr('href').match(/multiverseid=([^&]*)/)[1];
 
         // Card names
         card.names = [];
@@ -170,11 +169,13 @@ var parseOracle = function(multiverseid, data, callback) {
         var number1 = $('#' + leftPrefix + '_numberRow .value').text().trim();
         var name2 = $('#' + rightPrefix + '_nameRow .value').text().trim().replace(/Æ/g, 'Ae');;
 
-        if (number1.substr(-1) == 'a') {
+        if (number1.substr(-1) == 'a')
+        {
             card.names.push(name1);
             card.names.push(name2);
         }
-        else {
+        else
+        {
             card.names.push(name2);
             card.names.push(name1);
         }
@@ -277,6 +278,13 @@ var parseOracle = function(multiverseid, data, callback) {
         delete card.types;
     if (!card.subTypes.length)
         delete card.subTypes;
+
+    // Color Identity (For cards that don't have a mana cost / back sides of flip cards)
+    var colorIdentity = $('#' + idPrefix + '_colorIndicatorRow');
+    if (colorIdentity.length > 0) {
+        var colorIdentitiesImported = $('.value', colorIdentity).text().trim(); // "Blue" or "Blue, Green"
+        card.colorIdentity = colorIdentitiesImported.split(", "); // Input as an array of strings
+    }
 
     // Text
     var cardText = $('#' + idPrefix + '_textRow');
