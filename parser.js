@@ -442,8 +442,8 @@ var parseLanguages = function(data, callback) {
             $('table .cardItem').each(function(idx, item) {
                 var obj = {};
                 var cells = $('td', item);
-                obj.name = $(cells[1]).text().trim();
-                obj.language = $('a', cells[0]).text().trim();
+                obj.language = $(cells[1]).text().trim();
+                obj.name = $('a', cells[0]).text().trim();
                 obj.multiverseid = parseInt($('a', cells[0]).attr('href').match(/multiverseid=([^&]*)/)[1].trim());
                 languages.push(obj);
             });
