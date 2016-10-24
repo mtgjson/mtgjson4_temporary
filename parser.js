@@ -471,10 +471,79 @@ var parseLanguages = function(data, callback) {
     );
 };
 
+var parseToken = function(_token) {
+    var token = {};
+    Object.keys(_token).forEach(function(k) {
+        token[k] = _token[k];
+    });
+
+    if (Array.isArray(token.name))
+        token.name = token.name[0];
+
+    token.name = token.name.trim();
+
+    // Let's "chop off" anything between parentheses as well.
+    token.name = token.name.replace(/ *\([^\)]*\)/g, '');
+
+    token.printings = [];
+    token.set.forEach(function(_set) {
+        var cSet = _set['_'];
+        var x = { 'set': cSet };
+        if (_set['$'])
+            x.image = _set['$']['picURL'];
+
+        token.printings.push(x);
+    });
+
+    if (token.color) {
+        var colors = token.color;
+        if (typeof(colors) === 'string')
+            colors = colors.split('');
+        token.colors = colors.map(function(value, index, array) {
+            var aux = COLORS[value];
+            if (aux) return(aux)
+            console.log("WARNING: Cannot find color for %s.", value);
+            console.log(token);
+            return(value)
+        }).unique();
+    }
+
+    delete token.color;
+    delete token.set;
+    delete token.manacost;
+    delete token.tablerow;
+    delete token.token;
+
+    if (token.text && Array.isArray(token.text))
+        token.text = token.text[0];
+
+    if (token.text == '')
+        delete(token.text);
+
+    token.type = token.type[0];
+    if (token.pt && token.pt[0] != "") {
+        var pt = token.pt[0].split('/');
+        token.power = pt[0];
+        token.toughness = pt[1];
+    }
+    delete token.pt;
+
+    // Sort keys
+    var keys = Object.keys(token).sort();
+    keys.forEach(function(k) {
+        var aux = token[k];
+        delete token[k];
+        token[k] = aux;
+    });
+
+    return(token);
+};
+
 module.exports = {
     oracle: parseOracle,
     printed: parsePrinted,
     legalities: parseLegalities,
     printings: parsePrintings,
-    languages: parseLanguages
+    languages: parseLanguages,
+    token: parseToken
 };
