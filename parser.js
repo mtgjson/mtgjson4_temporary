@@ -169,13 +169,11 @@ var parseOracle = function(multiverseid, data, callback) {
         var number1 = $('#' + leftPrefix + '_numberRow .value').text().trim();
         var name2 = $('#' + rightPrefix + '_nameRow .value').text().trim().replace(/Æ/g, 'Ae');;
 
-        if (number1.substr(-1) == 'a')
-        {
+        if (number1.substr(-1) == 'a') {
             card.names.push(name1);
             card.names.push(name2);
         }
-        else
-        {
+        else {
             card.names.push(name2);
             card.names.push(name1);
         }
@@ -279,11 +277,20 @@ var parseOracle = function(multiverseid, data, callback) {
     if (!card.subTypes.length)
         delete card.subTypes;
 
-    // Color Identity (For cards that don't have a mana cost / back sides of flip cards)
-    var colorIdentity = $('#' + idPrefix + '_colorIndicatorRow');
-    if (colorIdentity.length > 0) {
-        var colorIdentitiesImported = $('.value', colorIdentity).text().trim(); // "Blue" or "Blue, Green"
-        card.colorIdentity = colorIdentitiesImported.split(", "); // Input as an array of strings
+    // Color Indicator (For cards that don't have a mana cost / back sides of flip cards)
+    var colorIndicator = $('#' + idPrefix + '_colorIndicatorRow');
+    if (colorIndicator.length > 0) {
+        var colorIndicatorImported = $('.value', colorIndicator).text().trim(); // "Blue" or "Blue, Green"
+        var colors = colorIdentitiesImported.split(", "); // Input as an array of strings
+        if (card.colors) {
+            console.log("Joining colors:");
+            console.log(card.colors);
+            console.log(colors);
+
+            card.colors = card.colors.concat(colors);
+        }
+        else
+            card.colors = colors;
     }
 
     // Text
