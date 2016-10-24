@@ -47,38 +47,6 @@ var set_load = function(set_code, callback) {
     });
 };
 
-// From: http://www.davekoelle.com/alphanum.html
-/*
-var sortAlphaNum = function(a, b) {
-    var reA = /[^a-zA-Z]/g;
-    var reN = /[^0-9]/g;
-    var AInt = parseInt(a, 10);
-    var BInt = parseInt(b, 10);
-
-    if (isNaN(AInt) && isNaN(BInt)) {
-        var aA = a.replace(reA, "");
-        var bA = b.replace(reA, "");
-        if (aA === bA) {
-            var aN = a.replace(reN, "");
-            var bN = b.replace(reN, "");
-            return(aN.localeCompare(bN));
-        }
-        else {
-            return aA > bA ? 1 : -1;
-        }
-    }
-    else if (isNaN(AInt)) {//A is not an Int
-        return 1; //to make alphanumeric sort first return -1 here
-    }
-    else if (isNaN(BInt)) {//B is not an Int
-        return -1; //to make alphanumeric sort first return 1 here
-    }
-    else {
-        return AInt > BInt ? 1 : -1;
-    }
-};
-*/
-
 /* ********************************************************************
  * Alphanum sort() function version - case sensitive
  *  - Slower, but easier to modify for arrays of objects which contain

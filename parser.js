@@ -157,12 +157,11 @@ var parseOracle = function(multiverseid, data, callback) {
         card.layout = 'double-sided'; // Meld are handled later
 
         // Find the correct column to work with
-	var leftPrefix = $(rightCol[0]).attr('id').replace('_rightCol', '');
-	var rightPrefix = $(rightCol[1]).attr('id').replace('_rightCol', '');
+        var leftPrefix = $(rightCol[0]).attr('id').replace('_rightCol', '');
+        var rightPrefix = $(rightCol[1]).attr('id').replace('_rightCol', '');
 
         var leftMultiverse = $('#' + leftPrefix + '_currentSetSymbol a').first().attr('href').match(/multiverseid=([^&]*)/)[1];
-	var rightMultiverse = $('#' + rightPrefix + '_currentSetSymbol a').first().attr('href').match(/multiverseid=([^&]*)/)[1];
-
+        var rightMultiverse = $('#' + rightPrefix + '_currentSetSymbol a').first().attr('href').match(/multiverseid=([^&]*)/)[1];
 
         // Card names
         card.names = [];
@@ -277,6 +276,22 @@ var parseOracle = function(multiverseid, data, callback) {
         delete card.types;
     if (!card.subTypes.length)
         delete card.subTypes;
+
+    // Color Indicator (For cards that don't have a mana cost / back sides of flip cards)
+    var colorIndicator = $('#' + idPrefix + '_colorIndicatorRow');
+    if (colorIndicator.length > 0) {
+        var colorIndicatorImported = $('.value', colorIndicator).text().trim(); // "Blue" or "Blue, Green"
+        var colors = colorIdentitiesImported.split(", "); // Input as an array of strings
+        if (card.colors) {
+            console.log("Joining colors:");
+            console.log(card.colors);
+            console.log(colors);
+
+            card.colors = card.colors.concat(colors);
+        }
+        else
+            card.colors = colors;
+    }
 
     // Text
     var cardText = $('#' + idPrefix + '_textRow');
