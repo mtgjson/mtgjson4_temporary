@@ -8,10 +8,10 @@
 	"block" : "Odyssey",
 	"booster" : ["rare", "uncommon", "uncommon", "uncommon", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common", "common"],
 	"translations": {
-		"de": "Odyssee,
-		"fr": "Odyssée,
-		"it": "Odissea,
-		"es": "Odisea,
+		"de": "Odyssee",
+		"fr": "Odyssée",
+		"it": "Odissea",
+		"es": "Odisea",
 		"pt": "Odisséia"
 	}
 }
