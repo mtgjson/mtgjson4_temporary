@@ -1,0 +1,208 @@
+[
+  {
+    "match": {
+      "multiverseid": 409741
+    },
+    "replace": {
+      "colorIdentity": [
+        "white",
+        "red"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 409742
+    },
+    "replace": {
+      "colors": [
+        "red"
+      ],
+      "colorIdentity": [
+        "white",
+        "red"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 409744
+    },
+    "replace": {
+      "colors": [
+        "white"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 409760
+    },
+    "replace": {
+      "colors": [
+        "white"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 409773
+    },
+    "replace": {
+      "colorIdentity": [
+        "white",
+        "black"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 409774
+    },
+    "replace": {
+      "colors": [
+        "black"
+      ],
+      "colorIdentity": [
+        "white",
+        "black"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 409786
+    },
+    "replace": {
+      "colorIdentity": [
+        "white",
+        "red"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 409787
+    },
+    "replace": {
+      "colors": [
+        "red"
+      ],
+      "colorIdentity": [
+        "white",
+        "red"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": [ 409791, 409797, 409832, 409837, 409840 ]
+    },
+    "replace": {
+      "colors": [
+        "blue"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 409844
+    },
+    "replace": {
+      "colors": [
+        "black"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 409855
+    },
+    "replace": {
+      "colorIdentity": [
+        "blue",
+        "black"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 409856
+    },
+    "replace": {
+      "colors": [
+        "blue"
+      ],
+      "colorIdentity": [
+        "blue",
+        "black"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": [ 409865, 409869 ]
+    },
+    "replace": {
+      "colors": [
+        "black"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": [ 409898, 409901, 409911, 409913, 409924, 409938, 409947 ]
+    },
+    "replace": {
+      "colors": [
+        "red"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": [ 409952, 409962, 409969, 409971, 409977, 409988, 409993 ]
+    },
+    "replace": {
+      "colors": [
+        "green"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 410008
+    },
+    "replace": {
+      "colors": [
+        "red",
+        "green"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 410049
+    },
+    "replace": {
+      "number": "281a",
+      "colorIdentity": [
+        "black"
+      ]
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 410050
+    },
+    "replace": {
+      "number": "281b",
+      "colors": [
+        "black"
+      ],
+      "colorIdentity": [
+        "black"
+      ]
+    }
+  }
+]

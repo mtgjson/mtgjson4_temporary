@@ -1,0 +1,4 @@
+[
+	{ "match" : {"name" : ["Elvish Archers", "Wall of Air", "Goblin Balloon Brigade"]}, "flavorAddExclamation" : true},
+	{ "match" : {"name" : ["Aladdin's Ring"]}, "flavorAddDash" : true}
+]
