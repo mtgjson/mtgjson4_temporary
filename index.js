@@ -93,47 +93,47 @@ var parseTokenForSet = function(setCode, callback) {
     var SET, _tokens;
 
     tiptoe(
-    function() {
-        tokens.forSet(setCode, this);
-    },
-    function(data) {
-        _tokens = data;
-        sets.load(setCode, this);
-    },
-    function(_SET) {
-        SET = _SET;
-        if (!SET.tokens) SET.tokens = [];
-        async.each(_tokens, function(token, cb) {
-        var setToken = findTokenInSet(token.name, SET);
-        if (setToken == null) {
-            setToken = token;
-            SET.tokens.push(setToken);
-            setToken['_id'] = uuid();
+        function() {
+            tokens.forSet(setCode, this);
+        },
+        function(data) {
+            _tokens = data;
+            sets.load(setCode, this);
+        },
+        function(_SET) {
+            SET = _SET;
+            if (!SET.tokens) SET.tokens = [];
+            async.each(_tokens, function(token, cb) {
+                var setToken = sets.findToken(token.name, SET);
+                if (setToken == null) {
+                    setToken = token;
+                    SET.tokens.push(setToken);
+                    setToken['_id'] = uuid();
+                }
+
+                Object.keys(token).forEach(function(k) {
+                    setToken[k] = token[k];
+                });
+
+                // Sort keys
+                var keys = Object.keys(setToken).sort();
+                keys.forEach(function(k) {
+                    var aux = setToken[k];
+                    delete setToken[k];
+                    setToken[k] = aux;
+                });
+
+                cb();
+            }, this);
+        },
+        function() {
+            sets.save(SET, this);
+        },
+        function(err) {
+            if (err) throw(err);
+            callback();
+
         }
-
-        Object.keys(token).forEach(function(k) {
-            setToken[k] = token[k];
-        });
-
-        // Sort keys
-        var keys = Object.keys(setToken).sort();
-        keys.forEach(function(k) {
-            var aux = setToken[k];
-            delete setToken[k];
-            setToken[k] = aux;
-        });
-
-        cb();
-        }, this);
-    },
-    function() {
-        sets.save(SET, this);
-    },
-    function(err) {
-        if (err) throw(err);
-        callback();
-
-    }
     );
 };
 
@@ -189,9 +189,9 @@ var cli = {
     }, this);
     },
     'token': function() {
-    var args = Array.prototype.slice.call(arguments, 0);
+        var args = Array.prototype.slice.call(arguments, 0);
 
-    async.eachSeries(args, parseTokenForSet, this);
+        async.eachSeries(args, parseTokenForSet, this);
     }
 };
 
