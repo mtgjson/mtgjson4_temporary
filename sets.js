@@ -3,10 +3,44 @@
 var fs = require('fs');
 var path = require('path');
 var tiptoe = require('tiptoe');
+var async = require('async');
 
 var uuid = require('./uuid');
 
 var set_cache = {};
+
+// Holds a dictionary that references gatherer codes with mtgjson codes, when they do not match.
+var set_codes = null;
+
+// Creates the set_codes object, that transforms gatherer codes into mtgjson codes for select sets.
+var load_set_codes = function(callback) {
+    set_codes = {};
+
+    fs.readdir(path.join(__dirname, 'data'), function(err, files) {
+        if (err)
+            throw(err);
+        async.each(
+            files,
+            function(fn, cb) {
+                if (fn.match(/^header_/) != null) {
+                    fs.readFile(path.join(__dirname, 'data', fn), 'utf-8', function(err, _data) {
+                        if (err) throw(err);
+                        var data = JSON.parse(_data);
+
+                        if (data.gathererCode && data.gathererCode != data.code) {
+                            set_codes[data.gathererCode] = data.code;
+                        }
+
+                        cb();
+                    });
+                }
+                else
+                    cb();
+            },
+            callback
+        );
+    });
+};
 
 var set_load = function(set_code, callback) {
     if (Object.keys(set_cache).indexOf(set_code) >= 0) {
@@ -17,6 +51,13 @@ var set_load = function(set_code, callback) {
     var setPath = path.join(__dirname, 'db', set_code + '.json');
 
     tiptoe(
+        function() {
+            // Load set codes
+            if (set_codes === null)
+                load_set_codes(this);
+            else
+                this();
+        },
         function() {
             var cb = this;
             // Check if we have a database with this code
@@ -241,13 +282,23 @@ var set_add = function(set, card, callback) {
                 if (setCard.layout != card.layout) {
                     if (setCard.layout == 'normal') {
                         console.log("WARNING: Changed layout of card %s. %s => %s", card.name, setCard.layout, card.layout);
-                        setCard.layout = card.layout
+                        setCard.layout = card.layout;
                     }
                 }
         }
         else
             setCard[key] = card[key];
     });
+
+    // Fix set codes
+    if (set_codes != null) {
+        var oldCodes = Object.keys(set_codes);
+        setCard.printings = setCard.printings.map(function(value, index, array) {
+            if (oldCodes.indexOf(value) >= 0)
+                return(set_codes[value]);
+            return(value);
+        });
+    }
 
     // FIXES
     if (set._fixes) {
@@ -304,8 +355,6 @@ var set_add = function(set, card, callback) {
         .forEach(function(key) {
             delete(setCard[key]);
         });
-
-    // TODO: Any set-specific corrections
 
     if (callback && typeof(callback) === 'function')
         setImmediate(callback, null, setCard);
