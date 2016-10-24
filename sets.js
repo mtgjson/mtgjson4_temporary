@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var tiptoe = require('tiptoe');
 
 var uuid = require('./uuid');
 
@@ -15,36 +16,48 @@ var set_load = function(set_code, callback) {
 
     var setPath = path.join(__dirname, 'db', set_code + '.json');
 
-    var getData = function(path) {
-    fs.readFile(path, function(err, data) {
-        if (err) {
-            callback(err);
-            return;
+    tiptoe(
+        function() {
+            var cb = this;
+            // Check if we have a database with this code
+            fs.stat(setPath, function(err, stats) {
+                if (err) {
+                    // Check if we have instructions for the set
+                    var fallbackPath = path.join(__dirname, 'data', 'header_' + set_code + '.json');
+                    fs.stat(fallbackPath, function(err2, stats) {
+                        if (err2) {
+                            // TODO: Create a proper error message
+                            cb(err2);
+                            return;
+                        }
+                        cb(null, fallbackPath);
+                    });
+                    return;
+                }
+
+                cb(null, setPath);
+            });
+        },
+        function(dataPath) {
+            fs.readFile(dataPath, this);
+        },
+        function(setData) {
+            var cb = this;
+
+            set_cache[set_code] = JSON.parse(setData);
+
+            fs.readFile(path.join(__dirname, 'data', 'fixes_' + set_code + '.json'), 'utf-8', function(err, data) {
+                if (!err) {
+                    set_cache[set_code]._fixes = JSON.parse(data);
+                }
+
+                cb();
+            });
+        },
+        function(err) {
+            callback(err, set_cache[set_code]);
         }
-
-        set_cache[set_code] = JSON.parse(data);
-        callback(null, set_cache[set_code]);
-    });
-    };
-
-    // Check if we have a database with this code
-    fs.stat(setPath, function(err, stats) {
-    if (err) {
-        // Check if we have instructions for the set
-        var fallbackPath = path.join(__dirname, 'data', 'header_' + set_code + '.json');
-        fs.stat(fallbackPath, function(err2, stats) {
-            if (err2) {
-                // TODO: Create a proper error message
-                callback(err2);
-                return;
-            }
-            getData(fallbackPath);
-        });
-        return;
-    }
-
-    getData(setPath);
-    });
+    );
 };
 
 /* ********************************************************************
@@ -92,8 +105,9 @@ var set_save = function(set, callback) {
     // Sort cards
     if (set.cards) {
         set.cards = set.cards.sort(function(a, b) {
-
-            return(sortAlphaNum(a.number, b.number));
+            if (a.number && b.number)
+                return(sortAlphaNum(a.number, b.number));
+            return(a.name.localeCompare(b.name));
         });
 
         set.cards.forEach(function(card) {
@@ -107,9 +121,15 @@ var set_save = function(set, callback) {
         });
     }
 
-    delete set.meldcards;
+    // Create a new object excluding internal stuff
+    var _set = {};
+    var ignoreKeys = [ 'meldcards', '_fixes' ];
+    Object.keys(set).forEach(function(k) {
+        if (ignoreKeys.indexOf(k) < 0)
+            _set[k] = set[k];
+    });
 
-    fs.writeFile(setPath, JSON.stringify(set, null, 2), 'utf-8', callback);
+    fs.writeFile(setPath, JSON.stringify(_set, null, 2), 'utf-8', callback);
 };
 
 /**
@@ -130,8 +150,11 @@ var set_add = function(set, card, callback) {
     }
 
     if (card._title) {
+        card._title = card._title.replace(/ *:/, ':'); // Fix some name nonsense.
         // Check if we're consistent. Make actions if we're not.
-        if (card._title != card.name && card.layout != 'double-sided' && card.layout != 'split') {
+        if (card._title.toLowerCase() != card.name.toLowerCase() && card.layout != 'double-sided' && card.layout != 'split') {
+            console.log('===FIX===');
+            console.log('"%s"\n"%s"', card._title, card.name);
             card.layout = 'flip';
             card.names = [ card._title, card.name ];
 
@@ -226,6 +249,51 @@ var set_add = function(set, card, callback) {
             setCard[key] = card[key];
     });
 
+    // FIXES
+    if (set._fixes) {
+        set._fixes.forEach(function(fix) {
+            var matches = fix.match;
+            var match = false;
+
+            // Check for name
+            if (matches.name) {
+                if (Array.isArray(matches.name)) {
+                    if (matches.name.indexOf(setCard.name) >= 0)
+                        match = true;
+                }
+                else
+                    if (matches.name == setCard.name)
+                        match = true;
+            }
+            // Check for multiverseid
+            if (matches.multiverseid) {
+                if (Array.isArray(matches.multiverseid)) {
+                    if (matches.multiverseid.indexOf(setCard.multiverseid) >= 0)
+                        match = true;
+                }
+                else
+                    if (matches.multiverseid == setCard.multiverseid)
+                        match = true;
+            }
+
+            if (match) {
+                // Apply fix.
+                console.log('Applying fix for "%s"...', setCard.name);
+
+                var availableFixes = Object.keys(fixes);
+                Object.keys(fix).forEach(function(fixName) {
+                    if (fixName == 'match') return;
+                    if (availableFixes.indexOf(fixName) < 0) {
+                        console.log('Unavailable fix "%s" for card "%s".', fixName, setCard.name);
+                        return;
+                    }
+
+                    fixes[fixName](setCard, fix[fixName]);
+                });
+            }
+        });
+    }
+
     // Delete unused/internal fields
     [
         '_title',
@@ -268,6 +336,45 @@ var findTokenInSet = function(name, set) {
     };
 
     return(set.tokens.find(findCB));
+};
+
+var fixes = {
+    'flavorAddExclamation': function(card, fix) {
+        var flavor = card.flavor;
+        var lastIndexOfQuote = flavor.lastIndexOf('"');
+        if (lastIndexOfQuote < 0) {
+            console.log('trying to apply fix flavorAddExclamation, but there are no quotes in the flavor: >>%s<<', flavor);
+            return;
+        }
+        else {
+            if (flavor[lastIndexOfQuote] != '!')
+                flavor = flavor.substr(0, lastIndexOfQuote) + '!' + flavor.substr(lastIndexOfQuote);
+        }
+
+        card.flavor = flavor;
+    },
+    'flavorAddDash': function(card, fix) {
+        var flavor = card.flavor;
+        var firstQuote = flavor.indexOf('"');
+        var secondQuote = flavor.indexOf('"', firstQuote + 1);
+        var lastIndexOfQuote = secondQuote;
+
+        if (lastIndexOfQuote < 0) {
+            console.log('trying to apply fix flavorAddDash, but there are no quotes in the flavor: >>%s<<', flavor);
+            return;
+        }
+        else {
+            if (flavor[lastIndexOfQuote + 1] != '—')
+                flavor = flavor.substr(0, lastIndexOfQuote + 1) + '—' + flavor.substr(lastIndexOfQuote + 1);
+        }
+
+        card.flavor = flavor;
+    },
+    'replace': function(card, fix) {
+        Object.keys(fix).forEach(function(field) {
+            card[field] = fix[field];
+        });
+    }
 };
 
 module.exports = {

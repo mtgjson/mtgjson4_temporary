@@ -1,0 +1,53 @@
+[
+  {
+    "match": {
+      "name": [
+        "Elvish Archers",
+        "Goblin Balloon Brigade",
+        "Wall of Air"
+      ]
+    },
+    "flavorAddExclamation": true
+  },
+  {
+    "match": {
+      "name": [
+        "Jade Statue",
+        "Scathe Zombies"
+      ]
+    },
+    "flavorAddDash": true
+  },
+  {
+    "match": {
+      "multiverseid": 243
+    },
+    "replace": {
+      "artist": "Mark Tedin"
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 248
+    },
+    "replace": {
+      "artist": "Mark Poole"
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 220
+    },
+    "replace": {
+      "artist": "Dan Frazier"
+    }
+  },
+  {
+    "match": {
+      "multiverseid": 285
+    },
+    "replace": {
+      "artist": "Jesper Myrfors"
+    }
+  }
+]
