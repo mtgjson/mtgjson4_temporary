@@ -149,7 +149,7 @@ var set_add = function(set, card, callback) {
                     otherCard.number = otherCard.number + 'a';
             }
         }
-        if (card.names && card.layout != 'flip') {
+        if (card.names && card.layout != 'flip' && card.text) {
             var matches = card.text.match(/\(Melds with ([^\.\)]*)\.?\)/);
             if (matches != null) {
                 if (!set.meldcards)

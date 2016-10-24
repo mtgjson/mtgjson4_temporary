@@ -68,6 +68,27 @@ var RARITIES = {
     'S': 'special'
 };
 
+// Convert an array of mana symbols into an array of colors
+var parseColors = function(_colors) {
+    var colors = _colors;
+
+    if (Array.isArray(colors))
+        colors = colors.join('');
+
+    var ret = [];
+
+    var i, len = colors.length;
+    for (i = 0; i < len; i++) {
+        var aux = COLORS[colors[i]];
+        if (aux)
+            ret.push(aux);
+    }
+
+    ret = ret.unique();
+
+    return(ret);
+}
+
 var fixText = function(blocks) {
     var parseBlock = function(block) {
     return block
@@ -277,22 +298,6 @@ var parseOracle = function(multiverseid, data, callback) {
     if (!card.subTypes.length)
         delete card.subTypes;
 
-    // Color Indicator (For cards that don't have a mana cost / back sides of flip cards)
-    var colorIndicator = $('#' + idPrefix + '_colorIndicatorRow');
-    if (colorIndicator.length > 0) {
-        var colorIndicatorImported = $('.value', colorIndicator).text().trim(); // "Blue" or "Blue, Green"
-        var colors = colorIdentitiesImported.split(", "); // Input as an array of strings
-        if (card.colors) {
-            console.log("Joining colors:");
-            console.log(card.colors);
-            console.log(colors);
-
-            card.colors = card.colors.concat(colors);
-        }
-        else
-            card.colors = colors;
-    }
-
     // Text
     var cardText = $('#' + idPrefix + '_textRow');
     if (cardText.length > 0) {
@@ -381,24 +386,24 @@ var parseOracle = function(multiverseid, data, callback) {
 
     // Calculate colors
     if (card.manacost) {
-        var matchedColors = card.manacost
-            .match(/{[2WUBRG/]*}/g);
+        var colors = parseColors(card.manacost);
+        if (colors.length > 0)
+            card.colors = colors;
+    }
+    // Color Indicator (For cards that don't have a mana cost / back sides of flip cards)
+    var colorIndicator = $('#' + idPrefix + '_colorIndicatorRow');
+    if (colorIndicator.length > 0) {
+        var colorIndicatorImported = $('.value', colorIndicator).text().trim(); // "Blue" or "Blue, Green"
+        var colors = colorIdentitiesImported.split(", "); // Input as an array of strings
+        if (card.colors) {
+            console.log("Joining colors:");
+            console.log(card.colors);
+            console.log(colors);
 
-        if (matchedColors != null && matchedColors.length > 0) {
-            card.colors = [];
-            var colors = [];
-            matchedColors.forEach(function(x) {
-                var symbol = x.replace(/[{}/]/g, '');
-                var i;
-                for (i = 0; i < symbol.length; i++) {
-                    if ('WUBRG'.indexOf(symbol[i]) >= 0)
-                        colors.push(symbol[i]);
-                }
-            });
-            colors.unique().forEach(function(x) {
-                card.colors.push(COLORS[x]);
-            });
+            card.colors = card.colors.concat(colors);
         }
+        else
+            card.colors = colors;
     }
 
     // Linked cards (for Meld)
@@ -496,16 +501,9 @@ var parseToken = function(_token) {
     });
 
     if (token.color) {
-        var colors = token.color;
-        if (typeof(colors) === 'string')
-            colors = colors.split('');
-        token.colors = colors.map(function(value, index, array) {
-            var aux = COLORS[value];
-            if (aux) return(aux)
-            console.log("WARNING: Cannot find color for %s.", value);
-            console.log(token);
-            return(value)
-        }).unique();
+        var colors = parseColors(token.color);
+        if (colors.length > 0)
+            token.colors = colors;
     }
 
     delete token.color;
