@@ -5,6 +5,7 @@ var path = require('path');
 var tiptoe = require('tiptoe');
 var async = require('async');
 
+var parser = require('./parser');
 var uuid = require('./uuid');
 
 var set_cache = {};
@@ -191,6 +192,9 @@ var set_add = function(set, card, callback) {
     }
 
     if (card._title) {
+        if (card._title == 'rathi Berserker')
+            card._title = 'Aerathi Berserker';
+
         card._title = card._title.replace(/ *:/, ':'); // Fix some name nonsense.
         // Check if we're consistent. Make actions if we're not.
         if (card._title.toLowerCase() != card.name.toLowerCase() && card.layout != 'double-sided' && card.layout != 'split') {
@@ -261,6 +265,46 @@ var set_add = function(set, card, callback) {
             card.layout = 'meld';
             card.names = set.meldcards[card.name];
         }
+    }
+
+    // Color Identity
+    var colorIdentity = [];
+    if (card.colors)
+        colorIdentity = card.colors;
+
+    if (card.text) {
+        var text = card.text.replace(/\([^\)]*\)/g, '');
+        var mana = text.match(/\{[^\}]*\}/g);
+        if (mana != null) {
+            mana = mana.join('');
+            colorIdentity = colorIdentity.concat(parser.colors(mana));
+        }
+    }
+    if (colorIdentity && colorIdentity.length > 0) {
+        card.colorIdentity = colorIdentity.unique();
+    }
+
+    if (card.names) {
+        card.names.forEach(function(name) {
+            if (name == card.name) return;
+
+            var otherCard = findCardInSetByName(name, set);
+            if (otherCard == null) {
+                console.log("Missing other card name: %s", name);
+                return;
+            }
+
+            if (otherCard.colors)
+                colorIdentity = colorIdentity.concat(otherCard.colors);
+            if (otherCard.text) {
+                var text = otherCard.text.replace(/\([^\)]*\)/g, '');
+                var mana = text.match(/\{[^\}]*\}/g);
+                if (mana != null) {
+                    mana = mana.join('');
+                    colorIdentity = colorIdentity.concat(parser.colors(mana));
+                }
+            }
+        });
     }
 
     if (!setCard) {

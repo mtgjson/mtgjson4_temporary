@@ -411,7 +411,7 @@ var parseOracle = function(multiverseid, data, callback) {
     var colorIndicator = $('#' + idPrefix + '_colorIndicatorRow');
     if (colorIndicator.length > 0) {
         var colorIndicatorImported = $('.value', colorIndicator).text().trim(); // "Blue" or "Blue, Green"
-        var colors = colorIdentitiesImported.split(", "); // Input as an array of strings
+        var colors = colorIndicatorImported.split(", "); // Input as an array of strings
         if (card.colors) {
             console.log("Joining colors:");
             console.log(card.colors);
@@ -560,5 +560,6 @@ module.exports = {
     legalities: parseLegalities,
     printings: parsePrintings,
     languages: parseLanguages,
-    token: parseToken
+    token: parseToken,
+    colors: parseColors
 };
