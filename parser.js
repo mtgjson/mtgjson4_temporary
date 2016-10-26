@@ -20,7 +20,7 @@ var SYMBOLS = {
     'Black': 'B',
     'Red': 'R',
     'Green': 'G',
-    'White or Blue': 'W/B',
+    'White or Blue': 'W/U',
     'Blue or Black': 'U/B',
     'Black or Red': 'B/R',
     'Red or Green': 'R/G',
