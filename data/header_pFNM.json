@@ -1,7 +1,7 @@
 {
-	"name" : "Friday Night Magic",
-	"code" : "pFNM",
-	"releaseDate" : "2000-02-01",
-	"border" : "black",
-	"type" : "promo"
+  "name": "Friday Night Magic",
+  "code": "pFNM",
+  "border": "black",
+  "type": "promo",
+  "gathererSet": false
 }
