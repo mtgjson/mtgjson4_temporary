@@ -1,6 +1,7 @@
 {
 	"name" : "Magic Game Day",
 	"code" : "pMGD",
+"isNotGathererSet": "true",
 	"releaseDate" : "2007-07-14",
 	"border" : "black",
 	"type" : "promo"

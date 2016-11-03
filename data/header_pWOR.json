@@ -1,6 +1,7 @@
 {
 	"name" : "Worlds",
 	"code" : "pWOR",
+"isNotGathererSet": "true",
 	"releaseDate" : "1999-08-04",
 	"border" : "black",
 	"type" : "promo"

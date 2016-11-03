@@ -1,6 +1,7 @@
 {
 	"name" : "Guru",
 	"code" : "pGRU",
+"isNotGathererSet": "true",
 	"releaseDate" : "1999-07-12",
 	"border" : "black",
 	"type" : "promo"

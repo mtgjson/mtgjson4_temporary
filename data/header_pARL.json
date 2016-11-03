@@ -1,6 +1,7 @@
 {
 	"name" : "Arena League",
 	"code" : "pARL",
+"isNotGathererSet": "true",
 	"releaseDate" : "1996-08-02",
 	"border" : "black",
 	"type" : "promo"

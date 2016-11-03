@@ -1,6 +1,7 @@
 {
   "name": "Friday Night Magic",
   "code": "pFNM",
+"isNotGathererSet": "true",
   "border": "black",
   "type": "promo",
   "gathererSet": false

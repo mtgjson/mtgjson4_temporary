@@ -1,6 +1,7 @@
 {
 	"name" : "Prerelease Events",
 	"code" : "pPRE",
+"isNotGathererSet": "true",
 	"releaseDate" : "1997-10-04",
 	"border" : "black",
 	"type" : "promo"

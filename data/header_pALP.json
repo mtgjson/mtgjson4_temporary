@@ -1,6 +1,7 @@
 {
 	"name" : "Asia Pacific Land Program",
 	"code" : "pALP",
+"isNotGathererSet": "true",
 	"releaseDate" : "1998-09-01",
 	"border" : "black",
 	"type" : "promo"

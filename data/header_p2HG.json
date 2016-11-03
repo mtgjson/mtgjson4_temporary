@@ -1,6 +1,7 @@
 {
 	"name" : "Two-Headed Giant Tournament",
 	"code" : "p2HG",
+"isNotGathererSet": "true",
 	"releaseDate" : "2005-12-09",
 	"border" : "black",
 	"type" : "promo"

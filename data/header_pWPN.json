@@ -1,6 +1,7 @@
 {
 	"name" : "Wizards Play Network",
 	"code" : "pWPN",
+"isNotGathererSet": "true",
 	"releaseDate" : "2008-10-01",
 	"border" : "black",
 	"type" : "promo"

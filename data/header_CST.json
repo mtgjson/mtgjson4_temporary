@@ -1,6 +1,7 @@
 {
 	"name" : "Coldsnap Theme Decks",
 	"code" : "CST",
+"isNotGathererSet": "true",
 	"releaseDate" : "2006-07-21",
 	"border" : "black",
 	"type" : "box",
