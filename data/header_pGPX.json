@@ -1,6 +1,7 @@
 {
 	"name" : "Grand Prix",
 	"code" : "pGPX",
+"isNotGathererSet": "true",
 	"releaseDate" : "2007-02-24",
 	"border" : "black",
 	"type" : "promo"

@@ -1,6 +1,7 @@
 {
 	"name" : "Release Events",
 	"code" : "pREL",
+"isNotGathererSet": "true",
 	"releaseDate" : "2003-07-26",
 	"border" : "black",
 	"type" : "promo"

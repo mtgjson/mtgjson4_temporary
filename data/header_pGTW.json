@@ -1,6 +1,7 @@
 {
 	"name" : "Gateway",
 	"code" : "pGTW",
+"isNotGathererSet": "true",
 	"releaseDate" : "2006-01-01",
 	"border" : "black",
 	"type" : "promo"

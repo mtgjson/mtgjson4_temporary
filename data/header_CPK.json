@@ -1,6 +1,7 @@
 {
 	"name" : "Clash Pack",
 	"code" : "CPK",
+"isNotGathererSet": "true",
 	"releaseDate" : "2014-07-18",
 	"border" : "black",
 	"type" : "starter"

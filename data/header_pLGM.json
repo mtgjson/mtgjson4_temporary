@@ -1,6 +1,7 @@
 {
 	"name" : "Legend Membership",
 	"code" : "pLGM",
+"isNotGathererSet": "true",
 	"releaseDate" : "1995-01-01",
 	"border" : "black",
 	"type" : "promo"

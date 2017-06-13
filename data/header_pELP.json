@@ -1,6 +1,7 @@
 {
 	"name" : "European Land Program",
 	"code" : "pELP",
+"isNotGathererSet": "true",
 	"releaseDate" : "2000-02-05",
 	"border" : "black",
 	"type" : "promo"

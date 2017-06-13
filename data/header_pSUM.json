@@ -1,6 +1,7 @@
 {
 	"name" : "Summer of Magic",
 	"code" : "pSUM",
+"isNotGathererSet": "true",
 	"releaseDate" : "2007-07-21",
 	"border" : "black",
 	"type" : "promo"

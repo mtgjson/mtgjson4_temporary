@@ -1,6 +1,7 @@
 {
 	"name" : "Launch Parties",
 	"code" : "pLPA",
+"isNotGathererSet": "true",
 	"releaseDate" : "2008-02-01",
 	"border" : "black",
 	"type" : "promo"

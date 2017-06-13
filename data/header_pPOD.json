@@ -1,6 +1,7 @@
 {
 	"name" : "Portal Demo Game",
 	"code" : "pPOD",
+"isNotGathererSet": "true",
 	"releaseDate" : "1997-05-01",
 	"border" : "black",
 	"type" : "promo"

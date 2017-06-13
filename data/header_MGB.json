@@ -1,6 +1,7 @@
 {
 	"name" : "Multiverse Gift Box",
 	"code" : "MGB",
+"isNotGathererSet": "true",
 	"releaseDate" : "1996-11-01",
 	"border" : "black",
 	"type" : "box"

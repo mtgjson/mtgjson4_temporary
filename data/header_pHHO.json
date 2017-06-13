@@ -1,6 +1,7 @@
 {
 	"name" : "Happy Holidays",
 	"code" : "pHHO",
+"isNotGathererSet": "true",
 	"oldCode" : "HHO",
 	"releaseDate" : "2006-12-31",
 	"border" : "silver",

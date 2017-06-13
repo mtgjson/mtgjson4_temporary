@@ -1,6 +1,7 @@
 {
 	"name" : "Dragon Con",
 	"code" : "pDRC",
+"isNotGathererSet": "true",
 	"releaseDate" : "1994-01-01",
 	"border" : "black",
 	"type" : "promo"
