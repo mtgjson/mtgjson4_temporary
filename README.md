@@ -15,7 +15,8 @@ Sourcecode for generating data for [mtgjson.com](https://mtgjson.com) website.
     * Tokens will also have unique "_id" fields.
     * Tokens will have their own array, separated from the cards array.
     * Tokens will have a "card generator" array, provided they are from the same set.
-    * Initially, tokens will be parsed from cockatrice: https://github.com/Cockatrice/Magic-Token/blob/master/tokens.xml
+    * Initially, tokens will be parsed from a sub-repo of the [Cockatrice project](https://cockatrice.github.io/):<br>
+    https://github.com/Cockatrice/Magic-Token/blob/master/tokens.xml
 * Fields that will be removed:
     * id
     * imageName
